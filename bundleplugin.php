@@ -142,7 +142,7 @@ function myplguin_admin_page()
         <h3 class="title_section">Advanced Custom Fields</h3>
         <p><strong><span>Step:1 -</span></strong>&nbsp;&nbsp;Activate the plugin if it is not activated</p>
         <?php   //$upload_dir = plugin_dir_path(__FILE__) . 'acf-export-2021-01-28.json';
-        $json_downloadpath = site_url().'/wp-content/plugins/bundleplugin/acf-export-2021-01-28.json';
+        $json_downloadpath = site_url().'/wp-content/plugins/wa4wp/acf-wa4wp.json';
         ?>
         <p><strong><span>Step:2 -</span></strong>&nbsp;&nbsp;Import file if it is not imported. Go to custom fields -> Tools -> Import Fields Groups -> Choose file -> Import.<a download href="<?php echo $json_downloadpath; ?>">Click here to download file</a></p>
 
