@@ -1,0 +1,174 @@
+[
+    {
+        "key": "group_6005987fa2e45",
+        "title": "Global Member Access Control",
+        "fields": [
+            {
+                "key": "field_600598a61e6a8",
+                "label": "MemberShipstatus",
+                "name": "membershipstatus",
+                "type": "checkbox",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "Pending Renewal": "Pending Renewal",
+                    "Lapsed": "Lapsed",
+                    "Pending Level Change": "Pending Level Change",
+                    "Pending New": "Pending New",
+                    "Active": "Active"
+                },
+                "allow_custom": 0,
+                "default_value": [
+                    "PendingRenewal",
+                    "Active"
+                ],
+                "layout": "vertical",
+                "toggle": 0,
+                "return_format": "value",
+                "save_custom": 0
+            },
+            {
+                "key": "field_60059a9d3f4dc",
+                "label": "Restricted Message for Non Members",
+                "name": "restricted_message_for_non_members",
+                "type": "wysiwyg",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "tabs": "all",
+                "toolbar": "basic",
+                "media_upload": 1,
+                "delay": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "options_page",
+                    "operator": "==",
+                    "value": "acf-options"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    },
+    {
+        "key": "group_600ad207c7d13",
+        "title": "Restrict individual Page and Post",
+        "fields": [
+            {
+                "key": "field_600ad225c6782",
+                "label": "Individual Page Restrict Value",
+                "name": "individual_page_restrict_value",
+                "type": "wysiwyg",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "tabs": "all",
+                "toolbar": "full",
+                "media_upload": 1,
+                "delay": 0
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "post"
+                }
+            ],
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "page"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    },
+    {
+        "key": "group_6007ce29f3001",
+        "title": "User Status",
+        "fields": [
+            {
+                "key": "field_6007ceb6c0cd3",
+                "label": "User Status",
+                "name": "userstatus_new",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "Pending Renewal": "Pending Renewal",
+                    "Lapsed": "Lapsed",
+                    "Pending Level": "Pending Level",
+                    "Pending New": "Pending New",
+                    "Active": "Active"
+                },
+                "default_value": [],
+                "allow_null": 0,
+                "multiple": 0,
+                "ui": 0,
+                "return_format": "value",
+                "ajax": 0,
+                "placeholder": ""
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "user_form",
+                    "operator": "==",
+                    "value": "edit"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": ""
+    }
+]

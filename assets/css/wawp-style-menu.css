@@ -1,0 +1,14 @@
+.wawp-menu-hide
+{
+display:none !important;
+}
+
+
+/*Style restrict message*/
+.vi-content-restrict {    
+	margin: 20px 0;
+    border: 1px solid #ccc;
+    padding: 20px;
+    background: #f9f9f9;}
+
+.post-content .vi-content-restrict p {margin-bottom: 5px;}

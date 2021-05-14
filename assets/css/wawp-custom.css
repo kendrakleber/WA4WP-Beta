@@ -1,0 +1,29 @@
+/* div#kvkoolitus_prices_metabox .inside {
+    overflow: auto;
+    white-space: nowrap;
+} */
+/* div#kvkoolitus_prices_metabox li{margin:5px; list-style: none; }
+.line{width:100%;    border-bottom: 1px solid #99999987;}
+section#bundle_top_section {
+    margin: 2% 0;
+} */
+
+.wrapper-custom {width:280px; font-family: Segoe, "Segoe UI", "DejaVu Sans", "Trebuchet MS", Verdana, "sans-serif"; font-size: 14px;}
+.wrapper-custom ul li {list-style: none; list-style-position: outside; margin: 6px 10px;}
+.wrapper-custom ul li:first-child {margin-left:0 !important; font-weight: bold !important;}
+.wrapper-custom ul li label {display: block; padding-left: 20px; text-indent: -21px;}
+.wrapper-custom ul li input {width:13px; 
+    /* height: 13px; */
+     padding: 0; margin: 0 4px 0 0; vertical-align: bottom; position: relative; top:-3px;}
+
+
+     .wrapper-custom ul li input{
+        top:-1px; margin:0 2px 0 0; 
+     }
+.wrapper-custom ul li label{
+    padding-left:25px; text-indent:-23px;
+}
+h2.globaltext-heading{ 
+font-size: 22px; 
+}
+
