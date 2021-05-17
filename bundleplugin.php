@@ -10,18 +10,18 @@
 
 /* Plugin css file */
 // Register actions to enqueue stylesheets
-add_action('admin_enqueue_scripts', 'wpdocs_selectively_enqueue_admin_script');
+add_action('admin_enqueue_scripts', 'wawp_selectively_enqueue_admin_script');
 
-function wpdocs_selectively_enqueue_admin_script($hook) {
+function wawp_selectively_enqueue_admin_script($hook) {
     if ($hook == 'toplevel_page_wa4wp') {
         wp_enqueue_style('wawp_custom_script', plugin_dir_url(__FILE__) . 'assets/css/wawp-style.css', array(), '1.0');
     }
     wp_enqueue_style('wawp_custom_script_user', plugin_dir_url(__FILE__) . 'assets/css/wawp-custom.css', array(), '1.0');
 }
 
-add_action('wp_enqueue_scripts', 'wpdocs_selectively_enqueue_menu_css');
+add_action('wp_enqueue_scripts', 'wawp_selectively_enqueue_menu_css');
 
-function wpdocs_selectively_enqueue_menu_css($hook) {
+function wawp_selectively_enqueue_menu_css($hook) {
     if (!is_user_logged_in()) {
         wp_enqueue_style('wa4wp_style_menu', plugin_dir_url(__FILE__) . 'assets/css/wawp-style-menu.css', array(), '1.0');
     }
@@ -29,16 +29,16 @@ function wpdocs_selectively_enqueue_menu_css($hook) {
 }
 
 // Register action to render WAWP menu pages
-add_action('admin_menu', 'my_admin_menu');
+add_action('admin_menu', 'wawp_admin_menu');
 
-function my_admin_menu() {
-    add_menu_page('WA4WP', 'WA4WP', 'manage_options', 'wa4wp', 'myplugin_admin_page', 'dashicons-businesswoman', 6);
+function wawp_admin_menu() {
+    add_menu_page('WA4WP', 'WA4WP', 'manage_options', 'wa4wp', 'wawp_admin_page', 'dashicons-businesswoman', 6);
     add_submenu_page('wa4wp', 'WA4WP', 'WA4WP', 'manage_options', 'wa4wp');
-    add_submenu_page('wa4wp', 'Global Access', 'Global Access', 'manage_options', 'globalaccess', 'myplugin_global_page');
+    add_submenu_page('wa4wp', 'Global Access', 'Global Access', 'manage_options', 'globalaccess', 'wawp_global_page');
 }
 
 // Render content for Global Access settings page
-function myplugin_global_page() {
+function wawp_global_page() {
     // Get WA current membership status, default to "Pending Renewal" if no such membership status exists 
     $memvalue = get_option('globalmembershipstatus');
     if (empty($memvalue)) {
@@ -107,7 +107,7 @@ function myplugin_global_page() {
 }
 
 // Render content for main WAWP settings page
-function myplugin_admin_page() {
+function wawp_admin_page() {
     ?>
     <section id="bundle_top_section">
         <div class="container">
@@ -132,9 +132,9 @@ function myplugin_admin_page() {
 }
 
 // Register activation hook
-add_action('activated_plugin', 'cyb_activation_redirect');
+add_action('activated_plugin', 'wawp_detect_activation');
 
-function cyb_activation_redirect($plugin) {
+function wawp_detect_activation($plugin) {
     if ($plugin == plugin_basename(__FILE__)) {
         exit(wp_redirect(admin_url('admin.php?page=wa4wp')));
 
@@ -153,15 +153,15 @@ $apl = get_option('active_plugins');
 $plugins = get_plugins();
 
 $active_plugins = array();
+
 foreach ($apl as $p) {
     if (isset($plugins[$p])) {
 
         array_push($active_plugins, $plugins[$p]['TextDomain']);
     }
 }
+
 if ($number_of_plugins_count < 2) {
-
-
     $upload_dir = plugin_dir_path(__FILE__) . 'corebundle.zip';
     $a = scandir($destination);
     $zip = new ZipArchive;
@@ -181,7 +181,6 @@ if ($number_of_plugins_count < 2) {
             update_option('active_plugins', $get_active_plugins);
         }
     }
-
 } else {
     if (!in_array('acf', $active_plugins)) {
         activate_plugin('advanced-custom-fields/acf.php');
@@ -195,8 +194,8 @@ if ($number_of_plugins_count < 2) {
 }
 
 // Register deactivation hook
-register_deactivation_hook(__FILE__, 'myplugin_deactivate');
-function myplugin_deactivate() {
+register_deactivation_hook(__FILE__, 'wawp_deactivate');
+function wawp_deactivate() {
     $active_plugins = get_option('active_plugins');
     foreach ($active_plugins as $listofplugins) {
         if ($listofplugins != 'advanced-custom-fields/acf.php' && $listofplugins != 'wild-apricot-login/wild-apricot-login.php') {
@@ -209,14 +208,14 @@ function myplugin_deactivate() {
 }
 
 // Add meta box for content restriction on posts
-add_action('add_meta_boxes', 'kvkoolitus_prices_metabox');
+add_action('add_meta_boxes', 'wawp_register_meta_box');
 
-function kvkoolitus_prices_metabox() {
+function wawp_register_meta_box() {
     $postpagenew = array('post', 'page');
     add_meta_box(
-        'kvkoolitus_prices_metabox',
-        __('Member Access', 'kvkoolitus'),
-        'kvkoolitus_prices_metabox_callback',
+        'wawp_member_access_meta_box',
+        __('Member Access', 'WA4WP'),
+        'wawp_member_access_meta_box',
         $postpagenew,
         'side',
         'default'
@@ -224,8 +223,8 @@ function kvkoolitus_prices_metabox() {
 }
 
 // Renders the membership roles metabox content
-function kvkoolitus_prices_metabox_callback($post) {
-    wp_nonce_field('kvkoolitus_prices_metabox_nonce', 'kvkoolitus_prices_nonce');
+function wawp_member_access_meta_box($post) {
+    wp_nonce_field('wawp_member_access_meta_box_nonce', 'wawp_member_access_nonce');
     global $wp_roles;
     $all_roles = $wp_roles;
     $rolegetdb = array('admin', 'edito');
@@ -330,10 +329,9 @@ function kvkoolitus_prices_metabox_callback($post) {
 }
 
 // Register action to save custom meta box
-add_action('save_post', 'kvkoolitus_prices_save_meta');
-
-function kvkoolitus_prices_save_meta($post_id) {
-    if (!isset($_POST['kvkoolitus_prices_nonce']) || !wp_verify_nonce($_POST['kvkoolitus_prices_nonce'], 'kvkoolitus_prices_metabox_nonce')) {
+add_action('save_post', 'wawp_save_member_access_meta_box');
+function wawp_save_member_access_meta_box($post_id) {
+    if (!isset($_POST['wawp_member_access_nonce']) || !wp_verify_nonce($_POST['wawp_member_access_nonce'], 'wawp_member_access_meta_box_nonce')) {
         return;
     }
 
@@ -349,9 +347,9 @@ function kvkoolitus_prices_save_meta($post_id) {
     }
 }
 
-add_action('admin_footer', 'cor_profile_subject_end');
-
-function cor_profile_subject_end() {
+add_action('admin_footer', 'wawp_script_checkbox');
+// Modifies behavior of checkboxes
+function wawp_script_checkbox() {
     ?> <script language="javascript">
         jQuery(function() {
             // add multiple select / deselect functionality
@@ -384,9 +382,10 @@ function cor_profile_subject_end() {
     </script> <?php
 }
 
-add_filter('the_content', 'my_replace_content', 10, 1);
+// Register filter for role-based content restriction
+add_filter('the_content', 'wawp_restrict_content', 10, 1);
 
-function my_replace_content($content) {
+function wawp_restrict_content($content) {
     // for updating the role based restriction
     $postidnew = get_the_ID();
     $km = get_post_meta($postidnew, 'rolecheckingcustom', true);
@@ -432,9 +431,9 @@ function my_replace_content($content) {
     return $content;
 }
 
-add_action('init', 'member_information_update');
+add_action('init', 'wawp_member_information_update');
 
-function member_information_update() {
+function wawp_member_information_update() {
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
@@ -530,19 +529,19 @@ function member_information_update() {
 }
 
 // Register action to schedule hourly role update
-add_action('wp', 'my_activation');
+add_action('wp', 'wawp_cron_activation');
 
-function my_activation() {
-    if (!wp_next_scheduled('my_hourly_event')) {
-        wp_schedule_event(current_time('timestamp'), 'hourly', 'my_hourly_event');
+function wawp_cron_activation() {
+    if (!wp_next_scheduled('wawp_event_hourly_update_member_data')) {
+        wp_schedule_event(current_time('timestamp'), 'hourly', 'wawp_event_hourly_update_member_data');
     }
 }
 
-// Register hourly cron job for the role update
-add_action('my_hourly_event', 'do_this_hourly');
+// Register hourly cron job for role update
+add_action('wawp_event_hourly_update_member_data', 'wawp_update_wildapricot_member_data');
 
 // Grabs user role data from Wild Apricot and updates WP's database
-function do_this_hourly() {
+function wawp_update_wildapricot_member_data() {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://oauth.wildapricot.org/auth/token',
@@ -631,10 +630,9 @@ function do_this_hourly() {
 }
 
 // Register action to import the custom fields data
-add_action('init', 'example_function');
+add_action('init', 'wawp_import_custom_fields');
 
-function example_function() {
-
+function wawp_import_custom_fields() {
     if (function_exists('get_field')) {
         $upload_dir_json = plugin_dir_path(__FILE__) . 'acf-wa4wp.json';
         $field_group_key = 'group_6005987fa2e45';
