@@ -6,62 +6,66 @@
  * Version: Beta
  * Author: NewPath Consulting
  * Author URI: https://newpathconsulting.com/
- **/
+**/
 
 /* Plugin css file */
-function wpdocs_selectively_enqueue_admin_script($hook)
-{
+// Register actions to enqueue stylesheets
+add_action('admin_enqueue_scripts', 'wpdocs_selectively_enqueue_admin_script');
+
+function wpdocs_selectively_enqueue_admin_script($hook) {
     if ($hook == 'toplevel_page_wa4wp') {
         wp_enqueue_style('wawp_custom_script', plugin_dir_url(__FILE__) . 'assets/css/wawp-style.css', array(), '1.0');
     }
     wp_enqueue_style('wawp_custom_script_user', plugin_dir_url(__FILE__) . 'assets/css/wawp-custom.css', array(), '1.0');
 }
-add_action('admin_enqueue_scripts', 'wpdocs_selectively_enqueue_admin_script');
 
-function wpdocs_selectively_enqueue_menu_css($hook)
-{
+add_action('wp_enqueue_scripts', 'wpdocs_selectively_enqueue_menu_css');
+
+function wpdocs_selectively_enqueue_menu_css($hook) {
     if (!is_user_logged_in()) {
         wp_enqueue_style('wa4wp_style_menu', plugin_dir_url(__FILE__) . 'assets/css/wawp-style-menu.css', array(), '1.0');
     }
 
 }
-add_action('wp_enqueue_scripts', 'wpdocs_selectively_enqueue_menu_css');
 
-
+// Register action to render WAWP menu pages
 add_action('admin_menu', 'my_admin_menu');
 
-function my_admin_menu()
-{
-    add_menu_page('WA4WP', 'WA4WP', 'manage_options', 'wa4wp', 'myplguin_admin_page', 'dashicons-businesswoman', 6);
+function my_admin_menu() {
+    add_menu_page('WA4WP', 'WA4WP', 'manage_options', 'wa4wp', 'myplugin_admin_page', 'dashicons-businesswoman', 6);
     add_submenu_page('wa4wp', 'WA4WP', 'WA4WP', 'manage_options', 'wa4wp');
-    add_submenu_page('wa4wp', 'Global Access', 'Global Access', 'manage_options', 'globalaccess', 'myplguin_global_page');
+    add_submenu_page('wa4wp', 'Global Access', 'Global Access', 'manage_options', 'globalaccess', 'myplugin_global_page');
 }
-function myplguin_global_page()
-{
+
+// Render content for Global Access settings page
+function myplugin_global_page() {
+    // Get WA current membership status, default to "Pending Renewal" if no such membership status exists 
     $memvalue = get_option('globalmembershipstatus');
     if (empty($memvalue)) {
         $memvalue = array("PendingRenewal", "active");
     } else {
         $memvalue = unserialize($memvalue);
     }
+
+    // Renders checkbox list of possible membership statuses and a textarea to enter a global restriction message
     ?>
-<form  id="formsubmit" action="" method="post">
-<h2  class="globaltext-heading"><strong>Membership Status</strong></h2>
-<input type="checkbox" id="memberstats" name="membershipstatus[]"    <?php checked(in_array('PendingRenewal', $memvalue));?> value="PendingRenewal">
-  <label for="vehicle1">Pending Renewal</label><br>
-  <input type="checkbox" id="memberstats2" name="membershipstatus[]" <?php checked(in_array('Lapsed', $memvalue));?> value="Lapsed">
-  <label for="memberstats2">Lapsed</label><br>
-  <input type="checkbox" id="memberstats3" name="membershipstatus[]" <?php checked(in_array('PendingLevel', $memvalue));?> value="PendingLevel">
-  <label for="memberstats3">Pending Level Change</label><br>
-  <input type="checkbox" id="memberstats4" name="membershipstatus[]" <?php checked(in_array('PendingNew', $memvalue));?> value="PendingNew">
-  <label for="memberstats4">Pending New</label><br>
-  <input type="checkbox" id="memberstats5" name="membershipstatus[]" <?php checked(in_array('Active', $memvalue));?> value="Active">
-  <label for="memberstats5">Active</label>
-<?php
-wp_nonce_field('_rohitink_meta_nonce', 'rohitink_meta_nonce');?>
-		<h2 class="globaltext-heading"><label for="rohitink_meta_content"><?php _e('Global Restriction Message', 'text-domain');?></label></h2>
-	<?php
-$meta_content_withslashes = get_option('globalrestrict_message'); //wpautop( rohitink_get_meta( 'rohitink_meta_content' ),true);
+    <form  id="formsubmit" action="" method="post">
+    <h2  class="globaltext-heading"><strong>Membership Status</strong></h2>
+    <input type="checkbox" id="memberstats" name="membershipstatus[]"    <?php checked(in_array('PendingRenewal', $memvalue));?> value="PendingRenewal">
+    <label for="vehicle1">Pending Renewal</label><br>
+    <input type="checkbox" id="memberstats2" name="membershipstatus[]" <?php checked(in_array('Lapsed', $memvalue));?> value="Lapsed">
+    <label for="memberstats2">Lapsed</label><br>
+    <input type="checkbox" id="memberstats3" name="membershipstatus[]" <?php checked(in_array('PendingLevel', $memvalue));?> value="PendingLevel">
+    <label for="memberstats3">Pending Level Change</label><br>
+    <input type="checkbox" id="memberstats4" name="membershipstatus[]" <?php checked(in_array('PendingNew', $memvalue));?> value="PendingNew">
+    <label for="memberstats4">Pending New</label><br>
+    <input type="checkbox" id="memberstats5" name="membershipstatus[]" <?php checked(in_array('Active', $memvalue));?> value="Active">
+    <label for="memberstats5">Active</label>
+    <?php
+    wp_nonce_field('_rohitink_meta_nonce', 'rohitink_meta_nonce');?>
+            <h2 class="globaltext-heading"><label for="rohitink_meta_content"><?php _e('Global Restriction Message', 'text-domain');?></label></h2>
+    <?php
+    $meta_content_withslashes = get_option('globalrestrict_message'); //wpautop( rohitink_get_meta( 'rohitink_meta_content' ),true);
     $meta_content = stripcslashes($meta_content_withslashes);
     wp_editor($meta_content, 'meta_content_editor', array(
         'wpautop' => true,
@@ -71,10 +75,12 @@ $meta_content_withslashes = get_option('globalrestrict_message'); //wpautop( roh
         'teeny' => true,
     ));
     ?>
-        <input type="submit" class="button button-primary button-large" id="savewp" name="save" value="Save">
-        </form>
-        <?php
-if (isset($_POST['save'])) {
+    <input type="submit" class="button button-primary button-large" id="savewp" name="save" value="Save">
+    </form>
+    <?php
+
+    // On message save, get the message content and membership status and add or update both settings
+    if (isset($_POST['save'])) {
         $wysyiwig_editor = trim($_POST['rohitink_meta_content']);
         $membershipstatus = $_POST['membershipstatus'];
         $globalmembership = serialize($membershipstatus);
@@ -93,53 +99,50 @@ if (isset($_POST['save'])) {
             update_option('globalrestrict_message', $wysyiwig_editor);
         }
         ?>
-         <script>
-         location.reload();
-         </script>
-         <?php
-}
-
-}
-function myplguin_admin_page()
-{
-    ?>
-<section id="bundle_top_section">
-    <div class="container">
-   <div class="steps_section">
-
-       <div class="steps_des bg">
-        <h3 class="title_section">Wild Apricot</h3>
-        <p><strong><span>Step:1 -</span></strong>&nbsp;&nbsp;Activate the plugin if it is not activated</p>
-        <p><strong><span>Step:2 -</span></strong>&nbsp;&nbsp;Go to the settings -> wild apricot login then configure the settings </p>
-       </div>
-      <div class="line"></div>
-       <div class="steps_des">
-        <h3 class="title_section">Advanced Custom Fields</h3>
-        <p><strong><span>Step:1 -</span></strong>&nbsp;&nbsp;Activate the plugin if it is not activated</p>
+        <script>
+        location.reload();
+        </script>
         <?php
-                $json_downloadpath = site_url() . '/wp-content/plugins/wa4wp/acf-wa4wp.json';
+    }
+}
+
+// Render content for main WAWP settings page
+function myplugin_admin_page() {
     ?>
-        <p><strong><span>Step:2 -</span></strong>&nbsp;&nbsp;Import file if it is not imported. Go to custom fields -> Tools -> Import Fields Groups -> Choose file -> Import.<a download href="<?php echo $json_downloadpath; ?>">Click here to download file</a></p>
-
-       </div>
-       <div class="line"></div>
-   </div>
-    </div>
-</section>
-
+    <section id="bundle_top_section">
+        <div class="container">
+            <div class="steps_section">
+                <div class="steps_des bg">
+                    <h3 class="title_section">Wild Apricot</h3>
+                    <p><strong><span>Step:1 -</span></strong>&nbsp;&nbsp;Activate the plugin if it is not activated</p>
+                    <p><strong><span>Step:2 -</span></strong>&nbsp;&nbsp;Go to the settings -> wild apricot login then configure the settings </p>
+                </div>
+                <div class="line"></div>
+                <div class="steps_des">
+                    <h3 class="title_section">Advanced Custom Fields</h3>
+                    <p><strong><span>Step:1 -</span></strong>&nbsp;&nbsp;Activate the plugin if it is not activated</p>
+                    <?php $json_downloadpath = site_url() . '/wp-content/plugins/wa4wp/acf-wa4wp.json'; ?>
+                    <p><strong><span>Step:2 -</span></strong>&nbsp;&nbsp;Import file if it is not imported. Go to custom fields -> Tools -> Import Fields Groups -> Choose file -> Import.<a download href="<?php echo $json_downloadpath; ?>">Click here to download file</a></p>
+                </div>
+                <div class="line"></div>
+            </div>
+        </div>
+    </section>
   <?php
 }
-//plugin Activation hook
-function cyb_activation_redirect($plugin)
-{
+
+// Register activation hook
+add_action('activated_plugin', 'cyb_activation_redirect');
+
+function cyb_activation_redirect($plugin) {
     if ($plugin == plugin_basename(__FILE__)) {
         exit(wp_redirect(admin_url('admin.php?page=wa4wp')));
 
     }
 }
-add_action('activated_plugin', 'cyb_activation_redirect');
 
-// plugin path to extract
+// Load external dependencies
+// Wild Apricot and Advanced Custom Fields
 $destination = ABSPATH . '/wp-content/plugins/';
 $add_our_plugin = scandir($destination);
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -191,10 +194,9 @@ if ($number_of_plugins_count < 2) {
     }
 }
 
-// plugin deactivation hook
+// Register deactivation hook
 register_deactivation_hook(__FILE__, 'myplugin_deactivate');
-function myplugin_deactivate()
-{
+function myplugin_deactivate() {
     $active_plugins = get_option('active_plugins');
     foreach ($active_plugins as $listofplugins) {
         if ($listofplugins != 'advanced-custom-fields/acf.php' && $listofplugins != 'wild-apricot-login/wild-apricot-login.php') {
@@ -205,9 +207,11 @@ function myplugin_deactivate()
     $plugindireactory = scandir($destination);
 
 }
-// content restriction
-function kvkoolitus_prices_metabox()
-{
+
+// Add meta box for content restriction on posts
+add_action('add_meta_boxes', 'kvkoolitus_prices_metabox');
+
+function kvkoolitus_prices_metabox() {
     $postpagenew = array('post', 'page');
     add_meta_box(
         'kvkoolitus_prices_metabox',
@@ -218,13 +222,11 @@ function kvkoolitus_prices_metabox()
         'default'
     );
 }
-add_action('add_meta_boxes', 'kvkoolitus_prices_metabox');
 
-function kvkoolitus_prices_metabox_callback($post)
-{
-    wp_nonce_field('kvkoolitus_prices_metabox_nonce', 'kvkoolitus_prices_nonce');?>
-  <?php
-global $wp_roles;
+// Renders the membership roles metabox content
+function kvkoolitus_prices_metabox_callback($post) {
+    wp_nonce_field('kvkoolitus_prices_metabox_nonce', 'kvkoolitus_prices_nonce');
+    global $wp_roles;
     $all_roles = $wp_roles;
     $rolegetdb = array('admin', 'edito');
     $km = get_post_meta($post->ID, 'rolecheckingcustom', true);
@@ -262,69 +264,75 @@ global $wp_roles;
             }
             $inc = 0;
             ?>
-<div class="wrapper-custom">
-<ul>
-<?php
-foreach ($leve_role_users as $newkey => $modified_role) {
+            <div class="wrapper-custom">
+            <!-- Render checkbox list of member roles -->
+            <ul>
+            <?php
+            foreach ($leve_role_users as $newkey => $modified_role) {
                 foreach ($modified_role as $key => $modified_roles) {
-                    if ($inc == 0) {
-                        ?>
- <li style="margin:0;font-weight: 600;">
- <label for="checkall"><input type="checkbox" value="checkall" id='selectall' name="checkall"  />
-			Select All Member Levels</label></li>
-     <li>
-     <label for="<?php echo $modified_roles; ?>">  <input type="checkbox" value="<?php echo $key; ?>" class='case' name="rolecheckingcustomvalue[]" <?php checked(in_array($key, $rolegetdb));?> />
- <?php echo $modified_roles; ?></label>
-<?php
-} else {
-                        ?>
-                    <li>
-                    <label for="<?php echo $modified_roles; ?>"> <input type="checkbox" value="<?php echo $key; ?>" class='case' name="rolecheckingcustomvalue[]" <?php checked(in_array($key, $rolegetdb));?> />
-     <?php echo $modified_roles; ?></label>
-    </li>
-                <?php
-
+                    if ($inc == 0) { ?>
+                        <li style="margin:0;font-weight: 600;">
+                            <label for="checkall"><input type="checkbox" value="checkall" id='selectall' name="checkall"  /> Select All Member Levels</label>
+                        </li>
+                        <li>
+                            <label for="<?php echo $modified_roles; ?>">
+                                <input type="checkbox" value="<?php echo $key; ?>" class='case' name="rolecheckingcustomvalue[]" <?php checked(in_array($key, $rolegetdb));?> />
+                                <?php echo $modified_roles; ?>
+                            </label>
+                        </li>
+                        <?php
+                    } else { ?>
+                        <li>
+                            <label for="<?php echo $modified_roles; ?>"> <input type="checkbox" value="<?php echo $key; ?>" class='case' name="rolecheckingcustomvalue[]" <?php checked(in_array($key, $rolegetdb));?> />
+                                <?php echo $modified_roles; ?>
+                            </label>
+                        </li>
+                        <?php
                     }
                     $inc++;
                 }
             }
             ?>
-    </ul><ul>
-    <?php
+            </ul>
 
+            <!-- Render checkbox list of group roles -->
+            <ul>
+            <?php
             $inc_forgroup = 0;
             foreach ($grouparray_members as $grp_array) {
                 foreach ($grp_array as $key => $modified_roles) {
-                    if ($inc_forgroup == 0) {
-                        ?>
+                    if ($inc_forgroup == 0) { ?>
                         <li style="margin:0;font-weight: 600;">
-                        <label for="checkall"><input type="checkbox" value="checkall" id='selectallnew' name="checkall"  />
-                 Select All Group Levels</label>
-                 </li>
-                 <li>
-                 <label for="<?php echo $modified_roles; ?>"> <input type="checkbox" value="<?php echo $key; ?>" class='casenew' name="rolecheckingcustomvalue[]" <?php checked(in_array($key, $rolegetdb));?> />
-   <?php echo $modified_roles; ?></label>
-  </li>
-                <?php
-} else {
-                        ?>
-<li>
-<label for="<?php echo $modified_roles; ?>"> <input type="checkbox" value="<?php echo $key; ?>" class='casenew' name="rolecheckingcustomvalue[]" <?php checked(in_array($key, $rolegetdb));?> />
-  <?php echo $modified_roles; ?></label>
-  </li>
-<?php
-}
+                            <label for="checkall"><input type="checkbox" value="checkall" id='selectallnew' name="checkall"  /> Select All Group Levels</label>
+                        </li>
+                        <li>
+                            <label for="<?php echo $modified_roles; ?>">
+                                <input type="checkbox" value="<?php echo $key; ?>" class='casenew' name="rolecheckingcustomvalue[]" <?php checked(in_array($key, $rolegetdb));?> />
+                                <?php echo $modified_roles; ?>
+                            </label>
+                        </li>
+                        <?php
+                    } else { ?>
+                        <li>
+                            <label for="<?php echo $modified_roles; ?>">
+                                <input type="checkbox" value="<?php echo $key; ?>" class='casenew' name="rolecheckingcustomvalue[]" <?php checked(in_array($key, $rolegetdb));?> />
+                                <?php echo $modified_roles; ?>
+                            </label>
+                        </li>
+                        <?php
+                    }
                     $inc_forgroup++;
                 }
             }
             echo "</ul></div>";
-
         }
     }
 }
-function kvkoolitus_prices_save_meta($post_id)
-{
 
+// Register action to save custom meta box
+add_action('save_post', 'kvkoolitus_prices_save_meta');
+
+function kvkoolitus_prices_save_meta($post_id) {
     if (!isset($_POST['kvkoolitus_prices_nonce']) || !wp_verify_nonce($_POST['kvkoolitus_prices_nonce'], 'kvkoolitus_prices_metabox_nonce')) {
         return;
     }
@@ -334,56 +342,52 @@ function kvkoolitus_prices_save_meta($post_id)
     }
 
     if (isset($_POST['rolecheckingcustomvalue'])) {
-
         $serialize = serialize($_POST['rolecheckingcustomvalue']);
         update_post_meta($post_id, 'rolecheckingcustom', sanitize_text_field($serialize));
     } else {
         delete_post_meta($post_id, 'rolecheckingcustom');
     }
 }
-add_action('save_post', 'kvkoolitus_prices_save_meta');
 
 add_action('admin_footer', 'cor_profile_subject_end');
-function cor_profile_subject_end()
-{
-    ?>
-	<script language="javascript">
-jQuery(function(){
-// add multiple select / deselect functionality
-        jQuery("#selectall").click(function () {
-            jQuery('.case').attr('checked', this.checked);
+
+function cor_profile_subject_end() {
+    ?> <script language="javascript">
+        jQuery(function() {
+            // add multiple select / deselect functionality
+            jQuery("#selectall").click(function () {
+                jQuery('.case').attr('checked', this.checked);
+            });
+            jQuery("#selectallnew").click(function () {
+                jQuery('.casenew').attr('checked', this.checked);
+            });
+
+            // if all checkboxes are selected, check the selectall checkbox
+            // and viceversa
+            jQuery(".case").click(function() {
+                if(jQuery(".case").length == jQuery(".case:checked").length) {
+                    jQuery("#selectall").attr("checked", "checked");
+                }
+                else {
+                    jQuery("#selectall").removeAttr("checked");
+                }
+            });
+            jQuery(".casenew").click(function() {
+                if(jQuery(".casenew").length == jQuery(".casenew:checked").length) {
+                    jQuery("#selectallnew").attr("checked", "checked");
+                }
+                else {
+                    jQuery("#selectallnew").removeAttr("checked");
+                }
+            });
         });
-        jQuery("#selectallnew").click(function () {
-            jQuery('.casenew').attr('checked', this.checked);
-        });
-
-// if all checkbox are selected, check the selectall checkbox
-// and viceversa
-jQuery(".case").click(function(){
-
-	if(jQuery(".case").length == jQuery(".case:checked").length) {
-		jQuery("#selectall").attr("checked", "checked");
-	}
-	else {
-		jQuery("#selectall").removeAttr("checked");
-	}
-
-});
-jQuery(".casenew").click(function(){
-if(jQuery(".casenew").length == jQuery(".casenew:checked").length) {
-    jQuery("#selectallnew").attr("checked", "checked");
+    </script> <?php
 }
-else {
-    jQuery("#selectallnew").removeAttr("checked");
-}
-});
-});
-</script>
-	<?php
-}
-function my_replace_content($content)
-{
-// for updating the role based restriction
+
+add_filter('the_content', 'my_replace_content', 10, 1);
+
+function my_replace_content($content) {
+    // for updating the role based restriction
     $postidnew = get_the_ID();
     $km = get_post_meta($postidnew, 'rolecheckingcustom', true);
     $privatepagevalue = get_post_meta($postidnew, 'individual_page_restrict_value', true);
@@ -428,11 +432,9 @@ function my_replace_content($content)
     return $content;
 }
 
-add_filter('the_content', 'my_replace_content', 10, 1);
-
 add_action('init', 'member_information_update');
-function member_information_update()
-{
+
+function member_information_update() {
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
@@ -527,20 +529,20 @@ function member_information_update()
     }
 }
 
-// hourly cron job for the role update
-add_action('my_hourly_event', 'do_this_hourly');
+// Register action to schedule hourly role update
+add_action('wp', 'my_activation');
 
-// The action will trigger when someone visits your WordPress site
-function my_activation()
-{
+function my_activation() {
     if (!wp_next_scheduled('my_hourly_event')) {
         wp_schedule_event(current_time('timestamp'), 'hourly', 'my_hourly_event');
     }
 }
-add_action('wp', 'my_activation');
 
-function do_this_hourly()
-{
+// Register hourly cron job for the role update
+add_action('my_hourly_event', 'do_this_hourly');
+
+// Grabs user role data from Wild Apricot and updates WP's database
+function do_this_hourly() {
     $curl = curl_init();
     curl_setopt_array($curl, array(
         CURLOPT_URL => 'https://oauth.wildapricot.org/auth/token',
@@ -628,10 +630,10 @@ function do_this_hourly()
     // do something every hour
 }
 
-// To import the custom fields data
+// Register action to import the custom fields data
+add_action('init', 'example_function');
 
-function example_function()
-{
+function example_function() {
 
     if (function_exists('get_field')) {
         $upload_dir_json = plugin_dir_path(__FILE__) . 'acf-wa4wp.json';
@@ -658,4 +660,4 @@ function example_function()
         }
     }
 }
-add_action('init', 'example_function');
+
