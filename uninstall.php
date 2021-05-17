@@ -3,68 +3,50 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
     die;
 }
 
-// if (!is_plugin_active('testplugin/testplugin.php')) {
-   // deactivate_plugins(array('advanced-custom-fields-pro/acf.php', 'ultimate-member/ultimate-member.php'));
-// }
-// else
-// {
-//     $result = activate_plugin('woo-checkout-field-editor-pro/checkout-form-designer.php');
-//     $result = activate_plugin('vickybhaiplugin/veryfirstplugin.php');
-//     $result = activate_plugin('woo-checkout-field-editor-pro/checkout-form-designer.php');
-// }
+// Get destination of plugins to be uninstalled
+$destination = ABSPATH . '/wp-content/plugins/';
 
-// $result1 = activate_plugin('advanced-custom-fields-pro/acf.php');
-// ///$result2 = activate_plugin('vickybhaiplugin/veryfirstplugin.php');
-// $result3 = activate_plugin('ultimate-member/ultimate-member.php');
-
-
-// $destination = $_SERVER['DOCUMENT_ROOT'] . '/testingpurpose/wp-content/plugins/';
-
-// $getoptions = get_option('uninstall_plugins');
-
-// print_r($getoptions);
-
-// TODO: Ask if user wants to uninstall wild-apricot-login and advanced-custom-fields
-
-if($_SERVER['SERVER_NAME']=='localhost')
-{
-  $destination = $_SERVER['DOCUMENT_ROOT'] . '/testingpurpose/wp-content/plugins/';
-}
-else{
-    $destination = $_SERVER['DOCUMENT_ROOT'] . '/wp-content/plugins/';
-}
-
+// Get active plugins
 $active_plugins=get_option('active_plugins');
+// Loop through each active plugin
 foreach($active_plugins as $listofplugins)
 {
+    // Check if current plugin is the plugin to be uninstalled
     if($listofplugins!='ultimate-member/ultimate-member.php'  && $listofplugins!='advanced-custom-fields-pro/acf.php' && $listofplugins!='advanced-custom-fields/acf.php' && $listofplugins!='wild-apricot-login/wild-apricot-login.php' )
     {
-        // echo "coming";
+        // Add plugin to the new active plugin
         $array_newplugin[]=$listofplugins;
     }
+    // Update active plugins with the ultimate-member, advanced-custom-fields, advanced-custom-fields-pro, and wild-apricot-login removed
     update_option('active_plugins',$array_newplugin);
 }
 
+// Get list of files in plugin destination
 $plugindireactory = scandir($destination);
+// Loop through each file
 foreach($plugindireactory as $pluginslist)
 {
-    // echo "<br/>".$pluginslist;
+    // checktodelete holds the four plugins to be deleted
     $checktodelete=array('wild-apricot-login','ultimate-member','advanced-custom-fields-pro', 'advanced-custom-fields');
+    // Check if the current plugin should be deleted
     if(in_array($pluginslist,$checktodelete))
     {
-        $dir =$destination.$pluginslist;
+        // Iterate through to the folder to be deleted
+        $dir = $destination.$pluginslist;
         $it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-        $files = new RecursiveIteratorIterator($it,
-             RecursiveIteratorIterator::CHILD_FIRST);
-    foreach($files as $file) {
-    if ($file->isDir()){
-        rmdir($file->getRealPath());
-    } else {
-        unlink($file->getRealPath());
-    }
-    }
-    rmdir($dir);
-        //echo $pluginslist;
+        $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+        // Loop through each file
+        foreach($files as $file) {
+            // Check if file is directory
+            if ($file->isDir()){
+                // Remove directory
+                rmdir($file->getRealPath());
+            } else { // Not a directory --> is a file
+                // Delete file
+                unlink($file->getRealPath());
+            }
+        }
+        // Remove directory
+        rmdir($dir);
     }
 }
-// die;
