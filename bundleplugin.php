@@ -114,15 +114,17 @@ function wawp_admin_page() {
             <div class="steps_section">
                 <div class="steps_des bg">
                     <h3 class="title_section">Wild Apricot</h3>
-                    <p><strong><span>Step:1 -</span></strong>&nbsp;&nbsp;Activate the plugin if it is not activated</p>
-                    <p><strong><span>Step:2 -</span></strong>&nbsp;&nbsp;Go to the settings -> wild apricot login then configure the settings </p>
+                    <p><strong><span>Step 1: </span></strong>&nbsp;&nbsp;Activate the Wild Apricot plugin if it is not activated.</p>
+                    <p><strong><span>Step 2: </span></strong>&nbsp;&nbsp;Go to Settings --> Wild Apricot Login to configure your Wild Apricot login settings. </p>
                 </div>
                 <div class="line"></div>
                 <div class="steps_des">
                     <h3 class="title_section">Advanced Custom Fields</h3>
-                    <p><strong><span>Step:1 -</span></strong>&nbsp;&nbsp;Activate the plugin if it is not activated</p>
+                    <p><strong><span>Step 1: </span></strong>&nbsp;&nbsp;Activate the Advanced Custom Fields plugin if it is not activated.</p>
+                    
+                    <p><strong><span>Step 2: </span></strong>&nbsp;&nbsp;Import file if it is not imported. Go to Custom Fields -> Tools -> Import Fields Groups -> Choose file -> Import. 
                     <?php $json_downloadpath = site_url() . '/wp-content/plugins/wa4wp/acf-wa4wp.json'; ?>
-                    <p><strong><span>Step:2 -</span></strong>&nbsp;&nbsp;Import file if it is not imported. Go to custom fields -> Tools -> Import Fields Groups -> Choose file -> Import.<a download href="<?php echo $json_downloadpath; ?>">Click here to download file</a></p>
+                    <a download href="<?php echo $json_downloadpath; ?>">Click here to download the custom fields file</a>.</p>
                 </div>
                 <div class="line"></div>
             </div>
