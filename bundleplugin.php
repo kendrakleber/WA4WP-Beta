@@ -1,11 +1,11 @@
 <?php
 /**
- * Plugin Name: WA4WP
- * Plugin URI: https://www.tetest.com/
- * Description: This is the WA4WP plugin.
- * Version: 1.0
- * Author: Your Name Here
- * Author URI: http://tetest.com/
+ * Plugin Name: Wild Apricot for WordPress (WA4WP)
+ * Plugin URI: https://www.newpathconsulting.com/wild-apricot-for-wordpress
+ * Description: The Wild Apricot for WordPress (WA4WP) plugin seamlessly integrates your existing Wild Apricot account with your WordPress website!
+ * Version: Beta
+ * Author: NewPath Consulting
+ * Author URI: https://newpathconsulting.com/
  **/
 
 /* Plugin css file */
