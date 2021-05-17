@@ -6,7 +6,7 @@
  * Version: 1.0
  * Author: Your Name Here
  * Author URI: http://tetest.com/
- **/
+**/
 
 /* Plugin css file */
 function wpdocs_selectively_enqueue_admin_script($hook)
@@ -634,7 +634,7 @@ function example_function()
 {
 
     if (function_exists('get_field')) {
-        $upload_dir_json = plugin_dir_path(__FILE__) . 'acf-export-2021-01-28.json';
+        $upload_dir_json = plugin_dir_path(__FILE__) . 'acf-wa4wp.json';
         $field_group_key = 'group_6005987fa2e45';
         $fields = acf_get_fields($field_group_key);
         if (!$fields) {
