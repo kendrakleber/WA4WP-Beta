@@ -180,9 +180,9 @@ register_activation_hook(__FILE__, function() {
     $check_plugins_exist = array('advanced-custom-fields', 'wild-apricot-login');
     $number_of_plugins_count = count(array_intersect($check_plugins_exist, $existing_plugins));
     // Check which plugins exist
-    $acf_exists = in_array('advanced-custom-fields/acf.php', $existing_plugins, true);
+    $acf_exists = in_array('advanced-custom-fields', $existing_plugins, true);
     // phpAlert("acf_exists: ". var_export($acf_exists, true));
-    $wal_exists = in_array('wild-apricot-login/wild-apricot-login.php', $existing_plugins, true);
+    $wal_exists = in_array('wild-apricot-login', $existing_plugins, true);
     // phpAlert("wal_exists: ". var_export($wal_exists, true));
     add_option('add_our_plugin', $existing_plugins);
     add_option('acf_exists', var_export($acf_exists, true));
