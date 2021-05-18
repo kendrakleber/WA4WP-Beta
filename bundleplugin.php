@@ -304,50 +304,50 @@ function wawp_detect_activation($plugin) {
 // Register deactivation hook
 register_deactivation_hook(__FILE__, 'wawp_deactivate');
 function wawp_deactivate() {
-    // $destination = ABSPATH . 'wp-content/plugins/';
-    // error_log($destination, 3, ABSPATH . 'wp-content/error.log');
-    $active_plugins = get_option('active_plugins');
+    // // $destination = ABSPATH . 'wp-content/plugins/';
+    // // error_log($destination, 3, ABSPATH . 'wp-content/error.log');
+    // $active_plugins = get_option('active_plugins');
 
-    // $plugins_to_deactivate = array();
-    // // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
-    // $acf_exists = get_option('acf_exists');
-    // $wal_exists = get_option('wal_exists');
+    // // $plugins_to_deactivate = array();
+    // // // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
+    // // $acf_exists = get_option('acf_exists');
+    // // $wal_exists = get_option('wal_exists');
 
-    // // my_log_file('acf_exists: ' . var_export($acf_exists, true));
-    // // my_log_file('wal_exists: ' . var_export($wal_exists, true));
+    // // // my_log_file('acf_exists: ' . var_export($acf_exists, true));
+    // // // my_log_file('wal_exists: ' . var_export($wal_exists, true));
 
-    // if (strcmp($acf_exists, 'false') == 0) { // equal
-    //     // deactivate acf
-    //     my_log_file('deactivating acf');
-    //     $plugins_to_deactivate[] = 'advanced-custom-fields/acf.php';
+    // // if (strcmp($acf_exists, 'false') == 0) { // equal
+    // //     // deactivate acf
+    // //     my_log_file('deactivating acf');
+    // //     $plugins_to_deactivate[] = 'advanced-custom-fields/acf.php';
 
+    // // }
+
+    // // if (strcmp($wal_exists, 'false') == 0) { // equal
+    // //     // deactivate wal
+    // //     my_log_file('deactivating wal');
+    // //     $plugins_to_deactivate[] = 'wild-apricot-login/wild-apricot-login.php';
+    // // }
+
+    // // Remove the plugins to be deactivated from the active plugins array
+    // $new_active_plugins = array();
+    // $our_plugin = plugin_basename(__FILE__);
+    // foreach ($active_plugins as $plugin) {
+    //     // if plugin is NOT in plugins_to_deactivate, add it to new_active_plugins
+    //     if (!in_array($plugin, $plugins_to_deactivate) && strcmp($our_plugin, $plugin) !== 0) {
+    //         my_log_file("not going to deactivate!: " . $plugin);
+    //         $new_active_plugins[] = $plugin;
+    //     }
     // }
 
-    // if (strcmp($wal_exists, 'false') == 0) { // equal
-    //     // deactivate wal
-    //     my_log_file('deactivating wal');
-    //     $plugins_to_deactivate[] = 'wild-apricot-login/wild-apricot-login.php';
+    // my_log_file("plugin basename " . plugin_basename(__FILE__));
+    // foreach ($new_active_plugins as $plugin) {
+    //     my_log_file("new active: " . $plugin);
     // }
-
-    // Remove the plugins to be deactivated from the active plugins array
-    $new_active_plugins = array();
-    $our_plugin = plugin_basename(__FILE__);
-    foreach ($active_plugins as $plugin) {
-        // if plugin is NOT in plugins_to_deactivate, add it to new_active_plugins
-        if (!in_array($plugin, $plugins_to_deactivate) && strcmp($our_plugin, $plugin) !== 0) {
-            my_log_file("not going to deactivate!: " . $plugin);
-            $new_active_plugins[] = $plugin;
-        }
-    }
-
-    my_log_file("plugin basename " . plugin_basename(__FILE__));
-    foreach ($new_active_plugins as $plugin) {
-        my_log_file("new active: " . $plugin);
-    }
-    foreach ($plugins_to_deactivate as $plugin) {
-        my_log_file("plugins to deactivate: " . $plugin);
-    }
-    // my_log_file("plugins_to_deactivate: " . var_dump($plugins_to_deactivate, true));
+    // foreach ($plugins_to_deactivate as $plugin) {
+    //     my_log_file("plugins to deactivate: " . $plugin);
+    // }
+    // // my_log_file("plugins_to_deactivate: " . var_dump($plugins_to_deactivate, true));
 
     require_once(ABSPATH . 'wp-admin/includes/plugin.php');
     add_action('update_option_active_plugins', 'wawp_deactivate_dependent');
