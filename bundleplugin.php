@@ -8,6 +8,10 @@
  * Author URI: https://newpathconsulting.com/
 **/
 
+function phpAlert($msg) {
+    echo '<script type="text/javascript">alert("' . $msg . '")</script>';
+}
+
 /* Plugin css file */
 // Register actions to enqueue stylesheets
 add_action('admin_enqueue_scripts', 'wawp_selectively_enqueue_admin_script');
@@ -39,7 +43,7 @@ function wawp_admin_menu() {
 
 // Render content for Global Access settings page
 function wawp_global_page() {
-    // Get WA current membership status, default to "Pending Renewal" if no such membership status exists 
+    // Get WA current membership status, default to "Pending Renewal" if no such membership status exists
     $memvalue = get_option('globalmembershipstatus');
     if (empty($memvalue)) {
         $memvalue = array("PendingRenewal", "active");
@@ -121,8 +125,8 @@ function wawp_admin_page() {
                 <div class="steps_des">
                     <h3 class="title_section">Advanced Custom Fields</h3>
                     <p><strong><span>Step 1: </span></strong>&nbsp;&nbsp;Activate the Advanced Custom Fields plugin if it is not activated.</p>
-                    
-                    <p><strong><span>Step 2: </span></strong>&nbsp;&nbsp;Import file if it is not imported. Go to Custom Fields -> Tools -> Import Fields Groups -> Choose file -> Import. 
+
+                    <p><strong><span>Step 2: </span></strong>&nbsp;&nbsp;Import file if it is not imported. Go to Custom Fields -> Tools -> Import Fields Groups -> Choose file -> Import.
                     <?php $json_downloadpath = site_url() . '/wp-content/plugins/wa4wp/acf-wa4wp.json'; ?>
                     <a download href="<?php echo $json_downloadpath; ?>">Click here to download the custom fields file</a>.</p>
                 </div>
@@ -133,79 +137,189 @@ function wawp_admin_page() {
   <?php
 }
 
+// // Wild Apricot and Advanced Custom Fields
+// $destination = ABSPATH . '/wp-content/plugins/';
+// $add_our_plugin = scandir($destination);
+// phpAlert("add_our_plugin" . $add_our_plugin);
+// require_once ABSPATH . 'wp-admin/includes/plugin.php';
+// $check_plugins_exist = array('advanced-custom-fields', 'wild-apricot-login');
+// $number_of_plugins_count = count(array_intersect($check_plugins_exist, $add_our_plugin));
+// // Check which plugins exist
+// $acf_exists = in_array('advanced-custom-fields/acf.php', $add_our_plugin, true);
+// // phpAlert("acf_exists: ". var_export($acf_exists, true));
+// $wal_exists = in_array('wild-apricot-login/wild-apricot-login.php', $add_our_plugin, true);
+// // phpAlert("wal_exists: ". var_export($wal_exists, true));
+// add_option('add_our_plugin', $add_our_plugin);
+// add_option('acf_exists', var_export($acf_exists, true));
+// add_option('wal_exists', var_export($wal_exists, true));
+
+// Activation hook
+register_activation_hook(__FILE__, function() {
+    // Load external dependencies
+    // Wild Apricot and Advanced Custom Fields
+    $destination = ABSPATH . 'wp-content/plugins/';
+    $existing_plugins = scandir($destination);
+    require_once ABSPATH . 'wp-admin/includes/plugin.php';
+    $check_plugins_exist = array('advanced-custom-fields', 'wild-apricot-login');
+    $number_of_plugins_count = count(array_intersect($check_plugins_exist, $existing_plugins));
+    // Check which plugins exist
+    $acf_exists = in_array('advanced-custom-fields/acf.php', $existing_plugins, true);
+    // phpAlert("acf_exists: ". var_export($acf_exists, true));
+    $wal_exists = in_array('wild-apricot-login/wild-apricot-login.php', $existing_plugins, true);
+    // phpAlert("wal_exists: ". var_export($wal_exists, true));
+    add_option('add_our_plugin', $existing_plugins);
+    add_option('acf_exists', var_export($acf_exists, true));
+    add_option('wal_exists', var_export($wal_exists, true));
+
+    // $apl = get_option('active_plugins');
+
+    // $plugins = get_plugins();
+
+    // $active_plugins = array();
+
+    // foreach ($apl as $p) {
+    //     if (isset($plugins[$p])) {
+
+    //         array_push($active_plugins, $plugins[$p]['TextDomain']);
+    //     }
+    // }
+
+    // if ACF or WAL aren't installed, unzip corebundle and install them
+    if (!in_array('advanced-custom-fields', $existing_plugins) || !in_array('wild-apricot-login', $existing_plugins)) {
+        // Unzip corebundle.zip
+        $upload_dir = plugin_dir_path(__FILE__) . 'corebundle.zip';
+        $a = scandir($destination);
+        $zip = new ZipArchive;
+        $res = $zip->open($upload_dir);
+
+        if ($res === true) {
+            $zip->extractTo($destination);
+            $zip->close();
+        }
+    }
+
+    $active_plugins = get_option('active_plugins');
+    // activate ACF and WAL if not activated
+    if (!in_array('advanced-custom-fields/acf.php', $active_plugins)) {
+        activate_plugin('advanced-custom-fields/acf.php');
+        $add_plugin = 'advanced-custom-fields/acf.php';
+        array_push($active_plugins, $add_plugin);
+    }
+
+    if (!(in_array('wild-apricot-login/wild-apricot-login.php', $active_plugins))) {
+        activate_plugin('wild-apricot-login/wild-apricot-login.php');
+        $add_plugin = 'wild-apricot-login/wild-apricot-login.php';
+        array_push($active_plugins, $add_plugin);
+    }
+
+    update_option('active_plugins', $active_plugins);
+});
+
 // Register activation hook
 add_action('activated_plugin', 'wawp_detect_activation');
 
 function wawp_detect_activation($plugin) {
+
     if ($plugin == plugin_basename(__FILE__)) {
         exit(wp_redirect(admin_url('admin.php?page=wa4wp')));
 
     }
 }
 
-// Load external dependencies
-// Wild Apricot and Advanced Custom Fields
-$destination = ABSPATH . '/wp-content/plugins/';
-$add_our_plugin = scandir($destination);
-require_once ABSPATH . 'wp-admin/includes/plugin.php';
-$check_plugins_exist = array("advanced-custom-fields", 'wild-apricot-login');
-$number_of_plugins_count = count(array_intersect($check_plugins_exist, $add_our_plugin));
-$apl = get_option('active_plugins');
+// // Load external dependencies
+// // Wild Apricot and Advanced Custom Fields
+// $destination = ABSPATH . '/wp-content/plugins/';
+// $add_our_plugin = scandir($destination);
+// require_once ABSPATH . 'wp-admin/includes/plugin.php';
+// $check_plugins_exist = array('advanced-custom-fields', 'wild-apricot-login');
+// $number_of_plugins_count = count(array_intersect($check_plugins_exist, $add_our_plugin));
+// // Check which plugins exist
+// $acf_exists = in_array('advanced-custom-fields', $add_our_plugin);
+// $wal_exists = in_array('wild-apricot-login', $add_our_plugin);
+// add_option('acf_exists', $acf_exists);
+// add_option('wal_exists', $wal_exists);
 
-$plugins = get_plugins();
+// $apl = get_option('active_plugins');
 
-$active_plugins = array();
+// $plugins = get_plugins();
 
-foreach ($apl as $p) {
-    if (isset($plugins[$p])) {
+// $active_plugins = array();
 
-        array_push($active_plugins, $plugins[$p]['TextDomain']);
-    }
-}
+// foreach ($apl as $p) {
+//     if (isset($plugins[$p])) {
 
-if ($number_of_plugins_count < 2) {
-    $upload_dir = plugin_dir_path(__FILE__) . 'corebundle.zip';
-    $a = scandir($destination);
-    $zip = new ZipArchive;
-    $res = $zip->open($upload_dir);
+//         array_push($active_plugins, $plugins[$p]['TextDomain']);
+//     }
+// }
 
-    if ($res === true) {
-        $zip->extractTo($destination);
-        $zip->close();
-        if (!in_array('acf', $active_plugins)) {
-            activate_plugin('advanced-custom-fields/acf.php');
-        }
+// if ($number_of_plugins_count < 2) {
+//     $upload_dir = plugin_dir_path(__FILE__) . 'corebundle.zip';
+//     $a = scandir($destination);
+//     $zip = new ZipArchive;
+//     $res = $zip->open($upload_dir);
 
-       $get_active_plugins = get_option('active_plugins');
-        if (!(in_array('wild-apricot-login/wild-apricot-login.php', $get_active_plugins))) {
-            $add_plugin = 'wild-apricot-login/wild-apricot-login.php';
-            array_push($get_active_plugins, $add_plugin);
-            update_option('active_plugins', $get_active_plugins);
-        }
-    }
-} else {
-    if (!in_array('acf', $active_plugins)) {
-        activate_plugin('advanced-custom-fields/acf.php');
-    }
-    $active_plugins = get_option('active_plugins');
-    if (!(in_array('wild-apricot-login/wild-apricot-login.php', $active_plugins))) {
-        $add_plugin = 'wild-apricot-login/wild-apricot-login.php';
-        array_push($active_plugins, $add_plugin);
-        update_option('active_plugins', $active_plugins);
-    }
-}
+//     if ($res === true) {
+//         $zip->extractTo($destination);
+//         $zip->close();
+//         if (!in_array('acf', $active_plugins)) {
+//             activate_plugin('advanced-custom-fields/acf.php');
+//         }
+
+//        $get_active_plugins = get_option('active_plugins');
+//         if (!(in_array('wild-apricot-login/wild-apricot-login.php', $get_active_plugins))) {
+//             $add_plugin = 'wild-apricot-login/wild-apricot-login.php';
+//             array_push($get_active_plugins, $add_plugin);
+//             update_option('active_plugins', $get_active_plugins);
+//         }
+//     }
+// } else {
+//     if (!in_array('acf', $active_plugins)) {
+//         activate_plugin('advanced-custom-fields/acf.php');
+//     }
+//     $active_plugins = get_option('active_plugins');
+//     if (!(in_array('wild-apricot-login/wild-apricot-login.php', $active_plugins))) {
+//         $add_plugin = 'wild-apricot-login/wild-apricot-login.php';
+//         array_push($active_plugins, $add_plugin);
+//         update_option('active_plugins', $active_plugins);
+//     }
+// }
 
 // Register deactivation hook
 register_deactivation_hook(__FILE__, 'wawp_deactivate');
 function wawp_deactivate() {
+    $destination = ABSPATH . 'wp-content/plugins/';
+    // error_log($destination, 3, ABSPATH . 'wp-content/error.log');
     $active_plugins = get_option('active_plugins');
-    foreach ($active_plugins as $listofplugins) {
-        if ($listofplugins != 'advanced-custom-fields/acf.php' && $listofplugins != 'wild-apricot-login/wild-apricot-login.php') {
-            $array_newplugin[] = $listofplugins;
-        }
-        update_option('active_plugins', $array_newplugin);
+
+
+
+    $plugins_to_deactivate = array();
+    // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
+    $acf_exists = var_dump(get_option('acf_exists'), true);
+    $wal_exists = var_dump(get_option('wal_exists'), true);
+
+    if ($acf_exists == 'false') {
+        // deactivate acf
+        $plugins_to_deactivate[] = 'advanced-custom-fields';
     }
-    $plugindireactory = scandir($destination);
+
+    if ($wal_exists == 'false') {
+        // deactivate wal
+        $plugins_to_deactivate[] = 'wild-apricot-login';
+    }
+
+
+    deactivate_plugins($plugins_to_deactivate);
+
+    // if not, we don't wanna do anything
+
+    // foreach ($active_plugins as $listofplugins) {
+    //     if ($listofplugins != 'advanced-custom-fields/acf.php' && $listofplugins != 'wild-apricot-login/wild-apricot-login.php') {
+    //         $array_newplugin[] = $listofplugins;
+    //     }
+    //     update_option('active_plugins', $array_newplugin);
+    // }
+    // $plugindireactory = scandir($destination);
 
 }
 
@@ -660,4 +774,3 @@ function wawp_import_custom_fields() {
         }
     }
 }
-
