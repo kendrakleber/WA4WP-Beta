@@ -12,10 +12,10 @@ $wal_was_installed = get_option('wal_exists');
 // check_to_delete holds the four plugins to be deleted
 $plugins_to_delete = array();
 if ($acf_was_installed == 'false') {
-    $plugins_to_delete[] = 'advanced-custom-fields';
+    $plugins_to_delete[] = 'advanced-custom-fields/acf.php';
 }
 if ($wal_was_installed == 'false') {
-    $plugins_to_delete[] = 'wild-apricot-login';
+    $plugins_to_delete[] = 'wild-apricot-login/wild-apricot-login.php';
 }
 
 foreach($plugins_to_delete as $plugin) {
