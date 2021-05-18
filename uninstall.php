@@ -3,10 +3,23 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
     die;
 }
 
+function my_log_file( $msg, $name = '' )
+{
+    // Print the name of the calling function if $name is left empty
+    $trace=debug_backtrace();
+    $name = ( '' == $name ) ? $trace[1]['function'] : $name;
+
+    $error_dir = '/Applications/MAMP/logs/php_error_uninstall.log';
+    $msg = print_r( $msg, true );
+    $log = $name . "  |  " . $msg . "\n";
+    error_log( $log, 3, $error_dir );
+}
+
 // Get destination of plugins to be uninstalled
 $destination = ABSPATH . '/wp-content/plugins/';
 
 // Check if plugins were installed previously
+// my_log_file('uninstall');
 $acf_was_installed = get_option('acf_exists');
 $wal_was_installed = get_option('wal_exists');
 // check_to_delete holds the four plugins to be deleted
@@ -18,9 +31,14 @@ if ($wal_was_installed == 'false') {
     $plugins_to_delete[] = 'wild-apricot-login/wild-apricot-login.php';
 }
 
-foreach($plugins_to_delete as $plugin) {
-    uninstall_plugin($plugin);
-}
+// foreach($plugins_to_delete as $plugin) {
+//     my_log_file($plugin);
+//     // require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+//     // uninstall_plugin($plugin);
+// }
+
+require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+delete_plugins($plugins_to_delete);
 
 //// Get active plugins
 // $active_plugins=get_option('active_plugins');
