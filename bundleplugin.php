@@ -308,28 +308,26 @@ function wawp_deactivate() {
     // error_log($destination, 3, ABSPATH . 'wp-content/error.log');
     $active_plugins = get_option('active_plugins');
 
+    // $plugins_to_deactivate = array();
+    // // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
+    // $acf_exists = get_option('acf_exists');
+    // $wal_exists = get_option('wal_exists');
 
+    // // my_log_file('acf_exists: ' . var_export($acf_exists, true));
+    // // my_log_file('wal_exists: ' . var_export($wal_exists, true));
 
-    $plugins_to_deactivate = array();
-    // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
-    $acf_exists = get_option('acf_exists');
-    $wal_exists = get_option('wal_exists');
+    // if (strcmp($acf_exists, 'false') == 0) { // equal
+    //     // deactivate acf
+    //     my_log_file('deactivating acf');
+    //     $plugins_to_deactivate[] = 'advanced-custom-fields/acf.php';
 
-    // my_log_file('acf_exists: ' . var_export($acf_exists, true));
-    // my_log_file('wal_exists: ' . var_export($wal_exists, true));
+    // }
 
-    if (strcmp($acf_exists, 'false') == 0) { // equal
-        // deactivate acf
-        my_log_file('deactivating acf');
-        $plugins_to_deactivate[] = 'advanced-custom-fields/acf.php';
-
-    }
-
-    if (strcmp($wal_exists, 'false') == 0) { // equal
-        // deactivate wal
-        my_log_file('deactivating wal');
-        $plugins_to_deactivate[] = 'wild-apricot-login/wild-apricot-login.php';
-    }
+    // if (strcmp($wal_exists, 'false') == 0) { // equal
+    //     // deactivate wal
+    //     my_log_file('deactivating wal');
+    //     $plugins_to_deactivate[] = 'wild-apricot-login/wild-apricot-login.php';
+    // }
 
     // Remove the plugins to be deactivated from the active plugins array
     $new_active_plugins = array();
@@ -352,9 +350,10 @@ function wawp_deactivate() {
     // my_log_file("plugins_to_deactivate: " . var_dump($plugins_to_deactivate, true));
 
     require_once(ABSPATH . 'wp-admin/includes/plugin.php');
-    deactivate_plugins($plugins_to_deactivate);
+    add_action('update_option_active_plugins', 'wawp_deactivate_dependent');
+    // deactivate_plugins($plugins_to_deactivate);
 
-    update_option('active_plugins', $new_active_plugins);
+    // update_option('active_plugins', $new_active_plugins);
 
     // if not, we don't wanna do anything
 
@@ -366,6 +365,32 @@ function wawp_deactivate() {
     // }
     // $plugindireactory = scandir($destination);
 
+}
+
+function wawp_deactivate_dependent() {
+    $plugins_to_deactivate = array();
+    // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
+    $acf_exists = get_option('acf_exists');
+    $wal_exists = get_option('wal_exists');
+
+    // my_log_file('acf_exists: ' . var_export($acf_exists, true));
+    // my_log_file('wal_exists: ' . var_export($wal_exists, true));
+
+    if (strcmp($acf_exists, 'false') == 0) { // equal
+        // deactivate acf
+        my_log_file('deactivating acf');
+        $plugins_to_deactivate[] = 'advanced-custom-fields/acf.php';
+
+    }
+
+    if (strcmp($wal_exists, 'false') == 0) { // equal
+        // deactivate wal
+        my_log_file('deactivating wal');
+        $plugins_to_deactivate[] = 'wild-apricot-login/wild-apricot-login.php';
+    }
+
+    require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+    deactivate_plugins($plugins_to_deactivate);
 }
 
 // Add meta box for content restriction on posts
