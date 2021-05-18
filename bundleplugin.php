@@ -154,22 +154,6 @@ function wawp_admin_page() {
   <?php
 }
 
-// // Wild Apricot and Advanced Custom Fields
-// $destination = ABSPATH . '/wp-content/plugins/';
-// $add_our_plugin = scandir($destination);
-// phpAlert("add_our_plugin" . $add_our_plugin);
-// require_once ABSPATH . 'wp-admin/includes/plugin.php';
-// $check_plugins_exist = array('advanced-custom-fields', 'wild-apricot-login');
-// $number_of_plugins_count = count(array_intersect($check_plugins_exist, $add_our_plugin));
-// // Check which plugins exist
-// $acf_exists = in_array('advanced-custom-fields/acf.php', $add_our_plugin, true);
-// // phpAlert("acf_exists: ". var_export($acf_exists, true));
-// $wal_exists = in_array('wild-apricot-login/wild-apricot-login.php', $add_our_plugin, true);
-// // phpAlert("wal_exists: ". var_export($wal_exists, true));
-// add_option('add_our_plugin', $add_our_plugin);
-// add_option('acf_exists', var_export($acf_exists, true));
-// add_option('wal_exists', var_export($wal_exists, true));
-
 // Activation hook
 register_activation_hook(__FILE__, function() {
     // Load external dependencies
@@ -243,128 +227,11 @@ function wawp_detect_activation($plugin) {
     }
 }
 
-// // Load external dependencies
-// // Wild Apricot and Advanced Custom Fields
-// $destination = ABSPATH . '/wp-content/plugins/';
-// $add_our_plugin = scandir($destination);
-// require_once ABSPATH . 'wp-admin/includes/plugin.php';
-// $check_plugins_exist = array('advanced-custom-fields', 'wild-apricot-login');
-// $number_of_plugins_count = count(array_intersect($check_plugins_exist, $add_our_plugin));
-// // Check which plugins exist
-// $acf_exists = in_array('advanced-custom-fields', $add_our_plugin);
-// $wal_exists = in_array('wild-apricot-login', $add_our_plugin);
-// add_option('acf_exists', $acf_exists);
-// add_option('wal_exists', $wal_exists);
-
-// $apl = get_option('active_plugins');
-
-// $plugins = get_plugins();
-
-// $active_plugins = array();
-
-// foreach ($apl as $p) {
-//     if (isset($plugins[$p])) {
-
-//         array_push($active_plugins, $plugins[$p]['TextDomain']);
-//     }
-// }
-
-// if ($number_of_plugins_count < 2) {
-//     $upload_dir = plugin_dir_path(__FILE__) . 'corebundle.zip';
-//     $a = scandir($destination);
-//     $zip = new ZipArchive;
-//     $res = $zip->open($upload_dir);
-
-//     if ($res === true) {
-//         $zip->extractTo($destination);
-//         $zip->close();
-//         if (!in_array('acf', $active_plugins)) {
-//             activate_plugin('advanced-custom-fields/acf.php');
-//         }
-
-//        $get_active_plugins = get_option('active_plugins');
-//         if (!(in_array('wild-apricot-login/wild-apricot-login.php', $get_active_plugins))) {
-//             $add_plugin = 'wild-apricot-login/wild-apricot-login.php';
-//             array_push($get_active_plugins, $add_plugin);
-//             update_option('active_plugins', $get_active_plugins);
-//         }
-//     }
-// } else {
-//     if (!in_array('acf', $active_plugins)) {
-//         activate_plugin('advanced-custom-fields/acf.php');
-//     }
-//     $active_plugins = get_option('active_plugins');
-//     if (!(in_array('wild-apricot-login/wild-apricot-login.php', $active_plugins))) {
-//         $add_plugin = 'wild-apricot-login/wild-apricot-login.php';
-//         array_push($active_plugins, $add_plugin);
-//         update_option('active_plugins', $active_plugins);
-//     }
-// }
-
 // Register deactivation hook
 register_deactivation_hook(__FILE__, 'wawp_deactivate');
 function wawp_deactivate() {
-    // // $destination = ABSPATH . 'wp-content/plugins/';
-    // // error_log($destination, 3, ABSPATH . 'wp-content/error.log');
-    // $active_plugins = get_option('active_plugins');
-
-    // // $plugins_to_deactivate = array();
-    // // // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
-    // // $acf_exists = get_option('acf_exists');
-    // // $wal_exists = get_option('wal_exists');
-
-    // // // my_log_file('acf_exists: ' . var_export($acf_exists, true));
-    // // // my_log_file('wal_exists: ' . var_export($wal_exists, true));
-
-    // // if (strcmp($acf_exists, 'false') == 0) { // equal
-    // //     // deactivate acf
-    // //     my_log_file('deactivating acf');
-    // //     $plugins_to_deactivate[] = 'advanced-custom-fields/acf.php';
-
-    // // }
-
-    // // if (strcmp($wal_exists, 'false') == 0) { // equal
-    // //     // deactivate wal
-    // //     my_log_file('deactivating wal');
-    // //     $plugins_to_deactivate[] = 'wild-apricot-login/wild-apricot-login.php';
-    // // }
-
-    // // Remove the plugins to be deactivated from the active plugins array
-    // $new_active_plugins = array();
-    // $our_plugin = plugin_basename(__FILE__);
-    // foreach ($active_plugins as $plugin) {
-    //     // if plugin is NOT in plugins_to_deactivate, add it to new_active_plugins
-    //     if (!in_array($plugin, $plugins_to_deactivate) && strcmp($our_plugin, $plugin) !== 0) {
-    //         my_log_file("not going to deactivate!: " . $plugin);
-    //         $new_active_plugins[] = $plugin;
-    //     }
-    // }
-
-    // my_log_file("plugin basename " . plugin_basename(__FILE__));
-    // foreach ($new_active_plugins as $plugin) {
-    //     my_log_file("new active: " . $plugin);
-    // }
-    // foreach ($plugins_to_deactivate as $plugin) {
-    //     my_log_file("plugins to deactivate: " . $plugin);
-    // }
-    // // my_log_file("plugins_to_deactivate: " . var_dump($plugins_to_deactivate, true));
-
     require_once(ABSPATH . 'wp-admin/includes/plugin.php');
     add_action('update_option_active_plugins', 'wawp_deactivate_dependent');
-    // deactivate_plugins($plugins_to_deactivate);
-
-    // update_option('active_plugins', $new_active_plugins);
-
-    // if not, we don't wanna do anything
-
-    // foreach ($active_plugins as $listofplugins) {
-    //     if ($listofplugins != 'advanced-custom-fields/acf.php' && $listofplugins != 'wild-apricot-login/wild-apricot-login.php') {
-    //         $array_newplugin[] = $listofplugins;
-    //     }
-    //     update_option('active_plugins', $array_newplugin);
-    // }
-    // $plugindireactory = scandir($destination);
-
 }
 
 function wawp_deactivate_dependent() {
