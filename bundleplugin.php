@@ -168,7 +168,7 @@ register_activation_hook(__FILE__, function() {
     // phpAlert("acf_exists: ". var_export($acf_exists, true));
     $wal_exists = in_array('wild-apricot-login', $existing_plugins, true);
     // phpAlert("wal_exists: ". var_export($wal_exists, true));
-    add_option('add_our_plugin', $existing_plugins);
+    // add_option('add_our_plugin', $existing_plugins);
     add_option('acf_exists', var_export($acf_exists, true));
     add_option('wal_exists', var_export($wal_exists, true));
 
