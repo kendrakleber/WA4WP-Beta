@@ -174,6 +174,8 @@ The page "Membership Profile" (/member-profile/) contains a Wild Apricot "widget
 
 Edit the member-profile page to reveal the member profile "widget" embed code. Using this HTML you can resize the width and height of this code. Any changes made in the Wild Apricot database will be automatically reflected on this page and all other Wild Apricot widgets embedded into a WordPress page or post.
 
+![image2](https://user-images.githubusercontent.com/458134/110494055-391a4b00-80c1-11eb-9e31-9994ff624be7.png)
+
 The code is displayed below so that you may copy and paste it into your site. Please note that the `src` values are specific to your Wild Apricot website. The code below is for the `https://members-digitalnovascotia.wildapricot.org` website. If this is not the URL of your Wild Apricot website, please replace `https://members-digitalnovascotia.wildapricot.org` in both `src` tags with the URL of your Wild Apricot website. For example, if your Wild Apricot website is `https://kendra76548.wildapricot.org/`, then the first `src` tag would become `https://kendra76548.wildapricot.org/widget/Sys/profile` and the second `src` tag would be `https://kendra76548.wildapricot.org/Common/EnableCookies.js`.
 ```
 <!-- wp:html -->
@@ -183,9 +185,6 @@ The code is displayed below so that you may copy and paste it into your site. Pl
 </script></p>
 <!-- /wp:html -->
 ```
-
-![image2](https://user-images.githubusercontent.com/458134/110494055-391a4b00-80c1-11eb-9e31-9994ff624be7.png)
-
 
 ***
 
