@@ -1,14 +1,14 @@
 Wild Apricot for Wordpress (WA4WP) Documentation
 
-Version 2.0 - May 19, 2021 
+Version 2.0 - May 19, 2021
 
 # WordPress Administrators Guide
 
 ## Installing and Configuring the WAWP Plugin
 
-In the left menu, navigate to to Plugins > Add New. Upload the [wa4wp.zip](tobeadded) plugin and activate. 
+In the left menu, navigate to to Plugins > Add New. Upload the [wa4wp.zip](tobeadded) plugin and activate.
 
-Note: This will automatically install and activate the Wild Apricot Login and Advanced Custom Fields plugins if these were not there previously. It will also import a ACF configuration file with 3 field groups. 
+Note: This will automatically install and activate the Wild Apricot Login and Advanced Custom Fields plugins if these were not there previously. It will also import a ACF configuration file with 3 field groups.
 
 To configuring the WAWP plugin, the Wild Apricot API settings must be set.
 
@@ -68,7 +68,7 @@ Having the same email will cause "an unknown error has occurred" to display when
 
 ## Updating functions.php
 
-Modify `functions.php` by adding these lines near the end. It is recommended that this is done within a child theme to ensure that the code is preserved if a theme is updated. 
+Modify `functions.php` by adding these lines near the end. It is recommended that this is done within a child theme to ensure that the code is preserved if a theme is updated.
 
 ```
 function get_user_role() {
@@ -84,7 +84,7 @@ function my_class_names($classes) {
     $classes[] = get_user_role();
     return $classes;
     }
-    
+
 //Hide admin bar for all users except administrators
 add_action('after_setup_theme', 'remove_admin_bar');
 function remove_admin_bar() {
@@ -172,6 +172,16 @@ The page "Membership Profile" (/member-profile/) contains a Wild Apricot "widget
 
 Edit the member-profile page to reveal the member profile "widget" embed code. Using this HTML you can resize the width and height of this code. Any changes made in the Wild Apricot database will be automatically reflected on this page and all other Wild Apricot widgets embedded into a WordPress page or post.
 
+The code is displayed below so that you may copy and paste it into your site. Please note that the `src` values are specific to your Wild Apricot website. The code below is for the "https://members-digitalnovascotia.wildapricot.org" website. If this is not the URL of your Wild Apricot website, please replace "https://members-digitalnovascotia.wildapricot.org" in both `src` tags with the URL of your Wild Apricot website. For example, if your Wild Apricot website is "https://kendra76548.wildapricot.org/", then the first `src` tag would become "https://kendra76548.wildapricot.org/widget/Sys/profile" and the second `src` tag would be "https://kendra76548.wildapricot.org/Common/EnableCookies.js".
+```
+<!-- wp:html -->
+<p><iframe src="https://members-digitalnovascotia.wildapricot.org/widget/Sys/profile" width="1250px" height="600px" frameborder="no">
+</iframe></p>
+<p><script type="text/javascript" language="javascript" src="https://members-digitalnovascotia.wildapricot.org/Common/EnableCookies.js">
+</script></p>
+<!-- /wp:html -->
+```
+
 ![image2](https://user-images.githubusercontent.com/458134/110494055-391a4b00-80c1-11eb-9e31-9994ff624be7.png)
 
 
@@ -208,4 +218,3 @@ This plugin makes it easy to integrate Wild Apricot member directories into a Wo
 # Version Control
 - v0.10.6 - Fix search bar bug when using php 7.4
 - v0.10.5 - initial version
-
