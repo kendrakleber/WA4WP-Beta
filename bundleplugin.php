@@ -8,18 +8,6 @@
  * Author URI: https://newpathconsulting.com/
 **/
 
-function my_log_file( $msg, $name = '' )
-{
-    // Print the name of the calling function if $name is left empty
-    $trace=debug_backtrace();
-    $name = ( '' == $name ) ? $trace[1]['function'] : $name;
-
-    $error_dir = '/Applications/MAMP/logs/php_error.log';
-    $msg = print_r( $msg, true );
-    $log = $name . "  |  " . $msg . "\n";
-    error_log( $log, 3, $error_dir );
-}
-
 /* Plugin css file */
 // Register actions to enqueue stylesheets
 add_action('admin_enqueue_scripts', 'wawp_selectively_enqueue_admin_script');
@@ -217,14 +205,11 @@ function wawp_deactivate_dependent() {
 
     if (strcmp($acf_exists, 'false') == 0) { // equal
         // deactivate acf
-        my_log_file('deactivating acf');
         $plugins_to_deactivate[] = 'advanced-custom-fields/acf.php';
-
     }
 
     if (strcmp($wal_exists, 'false') == 0) { // equal
         // deactivate wal
-        my_log_file('deactivating wal');
         $plugins_to_deactivate[] = 'wild-apricot-login/wild-apricot-login.php';
     }
 
