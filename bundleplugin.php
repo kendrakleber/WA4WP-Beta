@@ -8,15 +8,6 @@
  * Author URI: https://newpathconsulting.com/
 **/
 
-function phpAlert($msg) {
-    echo '<script type="text/javascript">alert("' . $msg . '")</script>';
-}
-
-function echo_log( $what )
-{
-    echo '<pre>'.print_r( $what, true ).'</pre>';
-}
-
 function my_log_file( $msg, $name = '' )
 {
     // Print the name of the calling function if $name is left empty
@@ -165,25 +156,9 @@ register_activation_hook(__FILE__, function() {
     $number_of_plugins_count = count(array_intersect($check_plugins_exist, $existing_plugins));
     // Check which plugins exist
     $acf_exists = in_array('advanced-custom-fields', $existing_plugins, true);
-    // phpAlert("acf_exists: ". var_export($acf_exists, true));
     $wal_exists = in_array('wild-apricot-login', $existing_plugins, true);
-    // phpAlert("wal_exists: ". var_export($wal_exists, true));
-    // add_option('add_our_plugin', $existing_plugins);
     add_option('acf_exists', var_export($acf_exists, true));
     add_option('wal_exists', var_export($wal_exists, true));
-
-    // $apl = get_option('active_plugins');
-
-    // $plugins = get_plugins();
-
-    // $active_plugins = array();
-
-    // foreach ($apl as $p) {
-    //     if (isset($plugins[$p])) {
-
-    //         array_push($active_plugins, $plugins[$p]['TextDomain']);
-    //     }
-    // }
 
     // if ACF or WAL aren't installed, unzip corebundle and install them
     if (!in_array('advanced-custom-fields', $existing_plugins) || !in_array('wild-apricot-login', $existing_plugins)) {
@@ -239,9 +214,6 @@ function wawp_deactivate_dependent() {
     // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
     $acf_exists = get_option('acf_exists');
     $wal_exists = get_option('wal_exists');
-
-    // my_log_file('acf_exists: ' . var_export($acf_exists, true));
-    // my_log_file('wal_exists: ' . var_export($wal_exists, true));
 
     if (strcmp($acf_exists, 'false') == 0) { // equal
         // deactivate acf
@@ -301,7 +273,6 @@ function wawp_member_access_meta_box($post) {
             unset($getroles['bbp_participant']);
             unset($getroles['employer']);
             unset($getroles['candidate']);
-            //unset($getroles['digital nova scotia']);
 
             $countnew = 0;
             $count = 0;
