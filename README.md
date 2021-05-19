@@ -62,7 +62,7 @@ Once you have created an API key, Client ID and Client secret, copy and paste th
 
 The WordPress administrators can now manage access to pages and posts based on Wild Apricot membership level and membership group.
 
-**Important Note: If your WordPress site shares an email address with your Wild Apricot site, you MUST change the email address of the existing WordPress user. You can do this in the Users menu in the WordPress dashboard. You can login with your Wild Apricot email, and then you can elevate that user to an administrator in WordPress if required. **
+**Important Note: If your WordPress site shares an email address with your Wild Apricot site, you MUST change the email address of the existing WordPress user. You can do this in the Users menu in the WordPress dashboard. You can login with your Wild Apricot email, and then you can elevate that user to an administrator in WordPress if required.**
 
 Having the same email will cause "an unknown error has occurred" to display when trying to login on the website.
 
@@ -115,6 +115,8 @@ Set the membership statuses that will be allowed to view restricted posts or pag
 You can show a default restricted message to visitors who are trying to access pages which they do not have access to. This message will be displayed to logged in members who do not have access to a restricted page.
 
 ![image11](https://user-images.githubusercontent.com/458134/110493644-cf9a3c80-80c0-11eb-8210-26380f967b83.png)
+
+Be sure to include the shortcode below to the bottom of your message:
 
 ```
 [wa_login login_label="Login/Reset Password" logout_label="Logout" redirect_page="/membership/member-hub/"]
