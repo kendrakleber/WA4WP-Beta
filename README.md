@@ -161,6 +161,8 @@ With the CSS Classes administrators can control which menus are displayed for me
 
 ## Putting the Login Button and Member Profile in Menus
 
+**Work in progress**
+
 ### Install Short Code in Menu Plugin
 
 ### Configure Menu
