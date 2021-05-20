@@ -6,7 +6,7 @@ Version 2.0 - May 19, 2021
 
 ## Installing and Configuring the WAWP Plugin
 
-In the left menu, navigate to to Plugins > Add New. Upload the [wa4wp.zip](tobeadded) plugin and activate.
+In the left menu, navigate to to Plugins > Add New. Upload the [zip file](https://github.com/NewPath-Consulting/WA4WP-Beta/archive/refs/heads/master.zip) of the plugin and activate.
 
 Note: This will automatically install and activate the Wild Apricot Login and Advanced Custom Fields plugins if these were not there previously. It will also import a ACF configuration file with 3 field groups.
 
@@ -62,13 +62,11 @@ Once you have created an API key, Client ID and Client secret, copy and paste th
 
 The WordPress administrators can now manage access to pages and posts based on Wild Apricot membership level and membership group.
 
-**Important Note: If your WordPress site shares an email address with your Wild Apricot site, you MUST change the email address of the existing WordPress user. You can do this in the Users menu in the WordPress dashboard. You can login with your Wild Apricot email, and then you can elevate that user to an administrator in WordPress if required.**
-
-Having the same email will cause "an unknown error has occurred" to display when trying to login on the website.
+**Important Note: If your WordPress site shares an email address with your Wild Apricot site, you MUST change the email address of the existing WordPress user. You can do this in the Users menu in the WordPress dashboard. You can login with your Wild Apricot email, and then you can elevate that user to an administrator in WordPress if required. Having the same email will cause "an unknown error has occurred" to display when trying to login on the website.**
 
 ## Updating functions.php
 
-Modify `functions.php` by adding these lines near the end. It is recommended that this is done within a child theme to ensure that the code is preserved if a theme is updated.
+In the left hand menu, go to Apperance > Theme Editor then under theme files on the right hand menu, select`functions.php`. Add the code below. It is recommended that this is done within a child theme to ensure that the code is preserved if a theme is updated.
 
 ```
 function get_user_role() {
@@ -121,9 +119,8 @@ Be sure to include the shortcode below to the bottom of your message:
 ```
 [wa_login login_label="Login/Reset Password" logout_label="Logout" redirect_page="/membership/member-hub/"]
 ```
-
-
-## Per Page and Post Settings<br>
+***
+## Per Page and Post Settings
 
 ### Setting a custom page/post restricted message
 
@@ -149,7 +146,6 @@ You can also set access to one or more membership groups using the Select All Gr
 The levels and groups are set inclusively -- that means that if a member is in one of the configured levels OR they are in a configured membership group they can see the page. If they don't fit one of the criteria they will be restricted to the page. Of course membership levels and groups can be unchecked to provide a wider level of access.
 
 ***
-
 ## Website Menu Management
 
 ### Showing Member-only menus
@@ -163,6 +159,25 @@ With the CSS Classes administrators can control which menus are displayed for me
 
 ![image19](https://user-images.githubusercontent.com/458134/110493939-16883200-80c1-11eb-80e1-4f708e7b1397.png)
 
+## Putting the Login Button and Member Profile in Menus
+
+### Install Short Code in Menu Plugin
+
+### Configure Menu
+
+We will create a Top Level (secondary) menu for the login and profile buttons.
+In the vertical menu select Appearance > Menus
+Select a menu to edit - Top (Navigation).
+Using ‘Add Menu Items’ drag and drop two ‘Custom Links’
+Configure the links as shown:
+TODO: Image
+
+```
+[wa_login login_label="Member Login" logout_label="Logout" redirect_page="/"]
+```
+Note: Make sure your theme displays the secondary header and is using the menus you set up
+
+### Update CSS
 
 ## Membership Level Sync
 
