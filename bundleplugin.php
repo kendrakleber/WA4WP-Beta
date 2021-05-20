@@ -8,18 +8,6 @@
  * Author URI: https://newpathconsulting.com/
 **/
 
-function my_log_file( $msg, $name = '' )
-{
-    // Print the name of the calling function if $name is left empty
-    $trace=debug_backtrace();
-    $name = ( '' == $name ) ? $trace[1]['function'] : $name;
-
-    $error_dir = '/Applications/MAMP/logs/php_error_may20.log';
-    $msg = print_r( $msg, true );
-    $log = $name . "  |  " . $msg . "\n";
-    error_log( $log, 3, $error_dir );
-}
-
 /* Plugin css file */
 // Register actions to enqueue stylesheets
 add_action('admin_enqueue_scripts', 'wawp_selectively_enqueue_admin_script');
@@ -161,8 +149,6 @@ register_activation_hook(__FILE__, function() {
     add_option('acf_exists', var_export($acf_exists, true)); // advanced-custom-fields
     add_option('wal_exists', var_export($wal_exists, true)); // wild-apricot-plugin
     add_option('sim_exists', var_export($sim_exists, true)); // shortcode-in-menus
-
-    // my_log_file('$destination: ' . $destination);
 
     // if ACF or WAL or SIM aren't installed, unzip corebundle and install them
     if (!in_array('advanced-custom-fields', $existing_plugins) || !in_array('wild-apricot-login', $existing_plugins) || !in_array('shortcode-in-menus', $existing_plugins)) {
