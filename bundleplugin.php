@@ -140,16 +140,18 @@ register_activation_hook(__FILE__, function() {
     $destination = ABSPATH . 'wp-content/plugins/';
     $existing_plugins = scandir($destination);
     require_once ABSPATH . 'wp-admin/includes/plugin.php';
-    $check_plugins_exist = array('advanced-custom-fields', 'wild-apricot-login');
+    $check_plugins_exist = array('advanced-custom-fields', 'wild-apricot-login', 'shortcode-in-menus');
     $number_of_plugins_count = count(array_intersect($check_plugins_exist, $existing_plugins));
-    // Check which plugins exist
-    $acf_exists = in_array('advanced-custom-fields', $existing_plugins, true);
-    $wal_exists = in_array('wild-apricot-login', $existing_plugins, true);
-    add_option('acf_exists', var_export($acf_exists, true));
-    add_option('wal_exists', var_export($wal_exists, true));
+    // Check which plugins exist and save to wp_options table
+    $acf_exists = in_array('advanced-custom-fields', $existing_plugins, true); // advanced-custom-fields
+    $wal_exists = in_array('wild-apricot-login', $existing_plugins, true); // wild-apricot-login
+    $sim_exists = in_array('shortcode-in-menus', $existing_plugins, true); // shortcode-in-menus
+    add_option('acf_exists', var_export($acf_exists, true)); // advanced-custom-fields
+    add_option('wal_exists', var_export($wal_exists, true)); // wild-apricot-plugin
+    add_option('sim_exists', var_export($sim_exists, true)); // shortcode-in-menus
 
-    // if ACF or WAL aren't installed, unzip corebundle and install them
-    if (!in_array('advanced-custom-fields', $existing_plugins) || !in_array('wild-apricot-login', $existing_plugins)) {
+    // if ACF or WAL or SIM aren't installed, unzip corebundle and install them
+    if (!in_array('advanced-custom-fields', $existing_plugins) || !in_array('wild-apricot-login', $existing_plugins) || !in_array('shortcode-in-menus', $existing_plugins)) {
         // Unzip corebundle.zip
         $upload_dir = plugin_dir_path(__FILE__) . 'corebundle.zip';
         $a = scandir($destination);
@@ -163,16 +165,22 @@ register_activation_hook(__FILE__, function() {
     }
 
     $active_plugins = get_option('active_plugins');
-    // activate ACF and WAL if not activated
+    // activate ACF if not activated
     if (!in_array('advanced-custom-fields/acf.php', $active_plugins)) {
         activate_plugin('advanced-custom-fields/acf.php');
         $add_plugin = 'advanced-custom-fields/acf.php';
         array_push($active_plugins, $add_plugin);
     }
-
+    // activate WAL if not activated
     if (!(in_array('wild-apricot-login/wild-apricot-login.php', $active_plugins))) {
         activate_plugin('wild-apricot-login/wild-apricot-login.php');
         $add_plugin = 'wild-apricot-login/wild-apricot-login.php';
+        array_push($active_plugins, $add_plugin);
+    }
+    // activate SIM if not activated
+    if (!(in_array('shortcode-in-menus/shortcode-in-menus.php', $active_plugins))) {
+        activate_plugin('shortcode-in-menus/shortcode-in-menus.php');
+        $add_plugin = 'shortcode-in-menus/shortcode-in-menus.php';
         array_push($active_plugins, $add_plugin);
     }
 
@@ -199,20 +207,30 @@ function wawp_deactivate() {
 
 function wawp_deactivate_dependent() {
     $plugins_to_deactivate = array();
-    // if ACF and WAL are installed w/ WAWP, we wanna deactivate them
+    // if ACF, WAL, and SIM are installed w/ WAWP, we want to deactivate them
     $acf_exists = get_option('acf_exists');
     $wal_exists = get_option('wal_exists');
+    $sim_exists = get_option('sim_exists');
 
+    // Check if advanced-custom-fields was NOT installed before
     if (strcmp($acf_exists, 'false') == 0) { // equal
         // deactivate acf
         $plugins_to_deactivate[] = 'advanced-custom-fields/acf.php';
     }
 
+    // Check if wild-apricot-login was NOT installed before
     if (strcmp($wal_exists, 'false') == 0) { // equal
         // deactivate wal
         $plugins_to_deactivate[] = 'wild-apricot-login/wild-apricot-login.php';
     }
 
+    // Check if shortcode-in-menus was NOT installed before
+    if (strcmp($sim_exists, 'false') == 0) { // equal
+        // deactivate wal
+        $plugins_to_deactivate[] = 'shortcode-in-menus/shortcode-in-menus.php';
+    }
+
+    // Deactivate plugins to be deactivated
     require_once(ABSPATH . 'wp-admin/includes/plugin.php');
     deactivate_plugins($plugins_to_deactivate);
 }

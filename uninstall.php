@@ -9,6 +9,7 @@ $destination = ABSPATH . '/wp-content/plugins/';
 // Check if plugins were installed previously
 $acf_was_installed = get_option('acf_exists');
 $wal_was_installed = get_option('wal_exists');
+$sim_was_installed = get_option('sim_exists');
 // check_to_delete holds the four plugins to be deleted
 $plugins_to_delete = array();
 if ($acf_was_installed == 'false') {
@@ -17,6 +18,9 @@ if ($acf_was_installed == 'false') {
 if ($wal_was_installed == 'false') {
     $plugins_to_delete[] = 'wild-apricot-login/wild-apricot-login.php';
 }
+if ($sim_was_installed == 'false') {
+    $plugins_to_delete[] = 'shortcode-in-menus/shortcode-in-menus.php';
+}
 
 require_once(ABSPATH . 'wp-admin/includes/plugin.php');
 delete_plugins($plugins_to_delete);
@@ -24,3 +28,4 @@ delete_plugins($plugins_to_delete);
 // Delete options
 delete_option('acf_exists');
 delete_option('wal_exists');
+delete_option('sim_exists');
