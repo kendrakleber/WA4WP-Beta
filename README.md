@@ -79,6 +79,10 @@ if (!current_user_can('administrator') && !is_admin()) {
   }
 ```
 
+This code is required for the user role functionality, the plugin will not function correctly without it. 
+
+Future: This will be included with the plugin.
+
 The plugin is set up. The WordPress administrators can now manage access to pages and posts based on Wild Apricot membership level and membership group.
 
 <br>
@@ -214,6 +218,8 @@ CSS Classes (optional): ```profile```
 All of these fields can be modified. This URL field goes to a page with the Wild Apricot member profile widget on it, this value can be anything. The Navigation Label is the text that is displayed for this menu item.
 
 <br>
+The CSS Classes fields are used for customization in the code in the next step. If you choose not to use this code, these fields can be left blank or filled with labels of your choosing. 
+
 Note: If you cannot see the CSS Classes field, scroll to the top of the page, click the Screen Options drop down, and under Show advanced menu properties, make sure the CSS Classes box is checked. See the section *Showing Member-only Menus* for more detailed instructions.
 
 You will now need to make sure that this header is displayed on your site. This can vary theme to theme. On the Menus page, and under the Edit Menus tab, scroll down to the Menu Settings options, and make sure that the correct display location is checked, in this case Top Navigation.
