@@ -153,15 +153,10 @@ register_activation_hook(__FILE__, function() {
     // if ACF or WAL or SIM aren't installed, unzip corebundle and install them
     if (!in_array('advanced-custom-fields', $existing_plugins) || !in_array('wild-apricot-login', $existing_plugins) || !in_array('shortcode-in-menus', $existing_plugins)) {
         // Unzip corebundle.zip
+        WP_Filesystem();
         $upload_dir = plugin_dir_path(__FILE__) . 'corebundle.zip';
         $a = scandir($destination);
-        $zip = new ZipArchive;
-        $res = $zip->open($upload_dir);
-
-        if ($res === true) {
-            $zip->extractTo($destination);
-            $zip->close();
-        }
+        unzip_file($upload_dir, $destination);
     }
 
     $active_plugins = get_option('active_plugins');
@@ -411,26 +406,27 @@ function wawp_script_checkbox() {
 
 // Register filter for role-based content restriction
 add_filter('the_content', 'wawp_restrict_content', 10, 1);
-
+// Function that decides which posts are restricted or not
 function wawp_restrict_content($content) {
     // for updating the role based restriction
-    $postidnew = get_the_ID();
-    $km = get_post_meta($postidnew, 'rolecheckingcustom', true);
-    $privatepagevalue = get_post_meta($postidnew, 'individual_page_restrict_value', true);
-    $contentrestriction = get_post_meta($postidnew, 'um_content_restriction', true);
-    $new_restricted_message = get_option('globalrestrict_message');
-    $newkm = get_post_meta($postidnew, 'rolecheckingcustom', true);
-    $user = wp_get_current_user();
-    $currentuserrole = $user->roles;
-    $rolegetdb = unserialize($newkm);
-    if (!current_user_can('update_core')) {
-        if (!empty($rolegetdb)) {
-            $checkroleacceess = array_intersect($currentuserrole, $rolegetdb);
-            $countofroles = count($checkroleacceess);
-            $uid = get_current_user_id();
-            $current_user_info = get_user_meta($uid);
-            $check_status_db = $current_user_info['userstatus_new'][0];
-            if ($countofroles <= 0) {
+    $postidnew = get_the_ID(); // retrieve ID of current item in WordPress loop
+    $km = get_post_meta($postidnew, 'rolecheckingcustom', true); // retrieves meta post field for post
+    $privatepagevalue = get_post_meta($postidnew, 'individual_page_restrict_value', true); // retrieves meta post field for restrict value
+    $contentrestriction = get_post_meta($postidnew, 'um_content_restriction', true); // retrieves meta post for content restriction
+    $new_restricted_message = get_option('globalrestrict_message'); // get restricted message
+    $newkm = get_post_meta($postidnew, 'rolecheckingcustom', true); // get meta post field for role checking
+    $user = wp_get_current_user(); // gets current user
+    $currentuserrole = $user->roles; // get user's roles
+    $rolegetdb = unserialize($newkm); // convert role checking to php variable
+    if (!current_user_can('update_core')) { // user can update core
+        if (!empty($rolegetdb)) { // role checking is NOT empty
+            $checkroleacceess = array_intersect($currentuserrole, $rolegetdb); // get role access
+            $countofroles = count($checkroleacceess); // count number of roles
+            $uid = get_current_user_id(); // get current user's id
+            $current_user_info = get_user_meta($uid); // retrieve user meta field for current user
+            $check_status_db = $current_user_info['userstatus_new'][0]; // get user status
+            if ($countofroles <= 0) { // roles are less than or equal to 0
+                // Restrict user
                 if ($privatepagevalue == "") {
 
                     $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($new_restricted_message)) . "</div>";
