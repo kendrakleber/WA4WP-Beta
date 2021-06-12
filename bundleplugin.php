@@ -418,7 +418,8 @@ function wawp_restrict_content($content) {
     $user = wp_get_current_user(); // gets current user
     $currentuserrole = $user->roles; // get user's roles
     $rolegetdb = unserialize($newkm); // convert role checking to php variable
-    if (!current_user_can('update_core')) { // user can update core
+    //truly what is the point of checking the core
+    if (!current_user_can('update_core')) { // user can update core 
         if (!empty($rolegetdb)) { // role checking is NOT empty
             $checkroleacceess = array_intersect($currentuserrole, $rolegetdb); // get role access
             $countofroles = count($checkroleacceess); // count number of roles
@@ -429,7 +430,7 @@ function wawp_restrict_content($content) {
                 // Restrict user
                 if ($privatepagevalue == "") {
 
-                    $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($new_restricted_message)) . "</div>";
+                    $content = "this member has no roles. The allowed roles are " . $rolegetdb;
                 } else {
                     $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
                 }
@@ -441,7 +442,7 @@ function wawp_restrict_content($content) {
                 $check_status_db = $current_user_info['userstatus_new'][0];
                 if (!in_array($check_status_db, $member_status)) {
                     if ($privatepagevalue == "") {
-                        $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($new_restricted_message)) . "</div>";
+                       $content = "member status is " . serialize($member_status) . " which is not in " . $check_status_db;
                     } else {
                         $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
                     }
