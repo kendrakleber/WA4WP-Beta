@@ -430,7 +430,7 @@ function wawp_restrict_content($content) {
                 // Restrict user
                 if ($privatepagevalue == "") {
 
-                    $content = "the intersection of " . serialize($currentuserrole) . " and " . serialize($rolegetdb) . " is empty. This case won't be checked because this failed, but also member status is " . $rolegetdb . " and check status db is " . $check_status_db;
+                    $content = "the intersection of " . serialize($currentuserrole) . " and " . serialize($rolegetdb) . " is empty. This case won't be checked because this failed, but also allowed member statuses are " . serialize($member_status) . " and check status db is " . $check_status_db;
                 } else {
                     $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
                 }
