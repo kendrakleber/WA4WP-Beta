@@ -430,7 +430,7 @@ function wawp_restrict_content($content) {
                 // Restrict user
                 if ($privatepagevalue == "") {
 
-                    $content = "the intersection of " . serialize($currentuserrole) . " and " . serialize($rolegetdb) . " is empty. This case won't be checked because this failed, but also allowed member statuses are " . serialize($member_status) . " and check status db is " . $check_status_db;
+                    $content =  "<div class='vi-content-restrict'>" . wpautop(stripslashes($new_restricted_message)) . "</div>";
                 } else {
                     $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
                 }
@@ -442,7 +442,7 @@ function wawp_restrict_content($content) {
                 $check_status_db = $current_user_info['userstatus_new'][0];
                 if (!in_array($check_status_db, $member_status)) {
                     if ($privatepagevalue == "") {
-                       $content = "allowed member statuses are" . serialize($member_status) . " which does not allow the current user one, which is " . $check_status_db . "Also, the intersection of " . serialize($currentuserrole) . " and " . serialize($rolegetdb) . " is " . serialize($checkroleacceess);
+                       $content = "check status db is " . $check_status_db . " this comes from current user info, which is an array, which has " . serialize($current_user_info) . " which comes from getting the meta of uid: " . $uid;
                     } else {
                         $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
                     }
