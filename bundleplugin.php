@@ -439,10 +439,11 @@ function wawp_restrict_content($content) {
                 $member_status = unserialize($member_status);
                 $uid = get_current_user_id();
                 $current_user_info = get_user_meta($uid);
-                $status_regex_pattern = ""membershipstatus";s:[0-9]+:"\K.+?(?=")"; //This gets the text that follows "membershipstatus";s:[an arbitrary number of numbers:" and before ";
+                //This gets the text comes after "membershipstatus";s:[an arbitrary number of numbers:" and before ";
                 //this will contain Active, PendingUpgrade, PendingLevel, PendingNew, or Lapsed. This is updated from wild apricot (likely on new log in)
-                //wa_contact_metadata contains a big string that has the status, but not in an easily accessable way, hence this                                                            
-                preg_match($status_regex_pattern, $current_user_info['wa_contact_metadata'][0], $check_status_db); //user status is extracted from metadata and stored in check_status_db
+                //wa_contact_metadata contains a big string that has the status, but not in an easily accessable way, hence a regex                                                            
+                preg_match('/"membershipstatus";s:[0-9]+:"\K.+?(?=")/', $current_user_info['wa_contact_metadata'][0], $extracted_user_status); //user status is extracted from metadata and stored in check_status_db
+                $check_status_db = $extracted_user_status[0];
                 if($check_status_db == "PendingUpgrade") {
                     $check_status_db = "PendingLevel"; //for some reason, pending upgrade is not what it is called in member_status
                 }
@@ -450,7 +451,7 @@ function wawp_restrict_content($content) {
                     if ($privatepagevalue == "") {
                        $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($new_restricted_message)) . "</div>";
                     } else {
-                        $content = "member status contains " . var_dump($member_status) . "and check status db is " . $check_status_db; //"<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
+                        $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
                     }
                 } else {
                     $content = $content;
