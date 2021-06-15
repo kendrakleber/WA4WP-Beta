@@ -442,7 +442,7 @@ function wawp_restrict_content($content) {
                 $check_status_db = $current_user_info['userstatus_new'][0];
                 if (!in_array($check_status_db, $member_status)) {
                     if ($privatepagevalue == "") {
-                       $content = "check status db is " . $check_status_db . " this comes from current user info, which is an array, which has " . serialize($current_user_info) . " which comes from getting the meta of uid: " . $uid;
+                       $content = "<?php print_r($current_user_info['wa_contact_metadata']); ?>";
                     } else {
                         $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
                     }
