@@ -425,7 +425,7 @@ function wawp_restrict_content($content) {
             $countofroles = count($checkroleacceess); // count number of roles
             $uid = get_current_user_id(); // get current user's id
             $current_user_info = get_user_meta($uid); // retrieve user meta field for current user
-            $check_status_db = $current_user_info['userstatus_new'][0]; // get user status
+            //$check_status_db = $current_user_info['userstatus_new'][0]; // get user status
             if ($countofroles <= 0) { // roles are less than or equal to 0
                 // Restrict user
                 if ($privatepagevalue == "") {
@@ -439,12 +439,18 @@ function wawp_restrict_content($content) {
                 $member_status = unserialize($member_status);
                 $uid = get_current_user_id();
                 $current_user_info = get_user_meta($uid);
-                $check_status_db = $current_user_info['userstatus_new'][0];
+                $status_regex_pattern = ""membershipstatus";s:[0-9]+:"\K.+?(?=")"; //This gets the text that follows "membershipstatus";s:[an arbitrary number of numbers:" and before ";
+                //this will contain Active, PendingUpgrade, PendingLevel, PendingNew, or Lapsed. This is updated from wild apricot (likely on new log in)
+                //wa_contact_metadata contains a big string that has the status, but not in an easily accessable way, hence this                                                            
+                preg_match($status_regex_pattern, $current_user_info['wa_contact_metadata'][0], $check_status_db); //user status is extracted from metadata and stored in check_status_db
+                if($check_status_db == "PendingUpgrade") {
+                    $check_status_db = "PendingLevel"; //for some reason, pending upgrade is not what it is called in member_status
+                }
                 if (!in_array($check_status_db, $member_status)) {
                     if ($privatepagevalue == "") {
-                       $content = "<?php print_r($current_user_info['wa_contact_metadata']); ?>";
+                       $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($new_restricted_message)) . "</div>";
                     } else {
-                        $content = "<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
+                        $content = "member status contains " . var_dump($member_status) . "and check status db is " . $check_status_db; //"<div class='vi-content-restrict'>" . wpautop(stripslashes($privatepagevalue)) . "</div>";
                     }
                 } else {
                     $content = $content;
